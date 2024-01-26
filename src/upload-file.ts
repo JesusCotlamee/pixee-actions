@@ -6,6 +6,8 @@ import * as api from "./api-client";
 import * as actionsUtil from "./actions-util";
 import * as fs from 'fs';
 import axios from "axios";
+import FormData from 'form-data';
+import * as core from "@actions/core";
 
 export async function uploadFromActions(
     file: string,
@@ -42,8 +44,6 @@ async function uploadFile(
     logger.startGroup("Uploading results");
     logger.info(`Processing pixee files: ${JSON.stringify(file)}`);
 
-    const fileContent = fs.readFileSync(file, 'utf-8');
-    const jsonData = JSON.parse(fileContent);
 
 
     /*    const fileJson = JSON.stringify(file);
@@ -52,12 +52,12 @@ async function uploadFile(
         logger.info(`Upload size: ${rawUploadSizeBytes} bytes`);*/
 
 
-    await uploadPayload(jsonData, repository, commitOid, baseUrl, logger);
+    await uploadPayload(file, repository, commitOid, baseUrl, logger);
     logger.endGroup();
 }
 
 async function uploadPayload(
-    jsonData: string,
+    filePath: string,
     repository: Repository,
     commitOid: string,
     baseUrl: string,
@@ -67,10 +67,19 @@ async function uploadPayload(
     const {owner, repo} = repository
     const customUrl = `${baseUrl}/${owner}/${repo}/${commitOid}/sonar`
 
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+
+    const form = new FormData();
+    form.append('file', fileContent, { filename: 'filePath' });
+
+
     return new Promise((resolve, reject) => {
         try {
-            axios.post(customUrl, jsonData, {
-                headers: api.getHeaders(),
+            axios.put(customUrl, form, {
+                headers: {
+                    ...form.getHeaders(),
+                    Authorization: `Bearer ${getToken()}`,
+                },
             })
                 .then(response => {
                     resolve(response.data);
@@ -83,6 +92,11 @@ async function uploadPayload(
         }
     });
 
+}
+
+ function getToken() {
+    const audience = 'https://app.pixee.ai'
+    return  core.getIDToken(audience)
 }
 
 class InvalidRequestError extends Error {
