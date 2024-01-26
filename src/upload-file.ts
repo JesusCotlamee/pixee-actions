@@ -5,6 +5,7 @@ import {UserError} from "./util";
 import * as api from "./api-client";
 import * as actionsUtil from "./actions-util";
 import * as fs from 'fs';
+import axios from "axios";
 
 export async function uploadFromActions(
     file: string,
@@ -41,49 +42,47 @@ async function uploadFile(
     logger.startGroup("Uploading results");
     logger.info(`Processing pixee files: ${JSON.stringify(file)}`);
 
-    const fileContent = fs.readFileSync(file);
-    const FormData = require('form-data');
-    const form = new FormData();
-    form.append('file', fileContent, { filename: 'archivo.txt' });
-
-/*    const fileJson = JSON.stringify(file);
-    const fileGzip = zlib.gzipSync(fileJson).toString("base64");
-    const rawUploadSizeBytes = fileJson.length;
-    logger.info(`Upload size: ${rawUploadSizeBytes} bytes`);*/
+    const fileContent = fs.readFileSync(file, 'utf-8');
+    const jsonData = JSON.parse(fileContent);
 
 
-    await uploadPayload(form, repository, commitOid, baseUrl, logger);
+    /*    const fileJson = JSON.stringify(file);
+        const fileGzip = zlib.gzipSync(fileJson).toString("base64");
+        const rawUploadSizeBytes = fileJson.length;
+        logger.info(`Upload size: ${rawUploadSizeBytes} bytes`);*/
+
+
+    await uploadPayload(jsonData, repository, commitOid, baseUrl, logger);
     logger.endGroup();
 }
 
 async function uploadPayload(
-    file: string,
+    jsonData: string,
     repository: Repository,
     commitOid: string,
     baseUrl: string,
     logger: Logger,
 ) {
     logger.info("Uploading results api client");
-    const client = await api.getApiClient(baseUrl);
+    const {owner, repo} = repository
+    const customUrl = `${baseUrl}/${owner}/${repo}/${commitOid}/sonar`
 
-    const response = await client.request(
-        "PUT /:owner/:repo/:sha/:tool",
-        {
-            owner: repository.owner,
-            repo: repository.repo,
-            sha: commitOid,
-            tool: 'sonar',
-            file,
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        },
-    );
+    return new Promise((resolve, reject) => {
+        try {
+            axios.post(customUrl, jsonData, {
+                headers: api.getHeaders(),
+            })
+                .then(response => {
+                    resolve(response.data);
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        } catch (error) {
+            reject(new Error(`Error al leer el archivo: ${error}`));
+        }
+    });
 
-    logger.debug(`response status: ${response.status}`);
-    logger.info("Successfully uploaded results");
-
-    return response.data.id;
 }
 
 class InvalidRequestError extends Error {
