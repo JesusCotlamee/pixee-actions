@@ -18,7 +18,7 @@ async function run() {
         const url = actionsUtil.getRequiredInput("url");
         console.log(`File name: ${file}, pixee url: ${url}`);
 
-        const uploadResult = await upload_lib.uploadFromActions(
+       await upload_lib.uploadFromActions(
             file,
             url,
             actionsUtil.getRequiredInput("checkout_path"),

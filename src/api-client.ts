@@ -4,9 +4,6 @@ import {getActionVersion} from "./actions-util";
 import {getRequiredEnvParam} from "./util";
 import * as retry from "@octokit/plugin-retry";
 
-
-export type GitHubApiCombinedDetails = GitHubApiDetails
-
 export interface GitHubApiDetails {
     Authorization: string;
     url: string;
@@ -15,7 +12,7 @@ export interface GitHubApiDetails {
 
 function createApiClientWithDetails(
     baseUrl: string,
-    apiDetails: GitHubApiCombinedDetails
+    apiDetails: GitHubApiDetails
 ) {
     const auth = apiDetails.Authorization;
     const retryingOctokit = githubUtils.GitHub.plugin(retry.retry);
