@@ -1,0 +1,24 @@
+name: 'Upload file'
+description: 'Pixee action upload file'
+author: 'Pixee'
+inputs:
+  file:
+    description: 'File'
+    required: true
+  url:
+    description: 'Pixee endpoint'
+    required: true
+  checkout_path:
+    description: "The path at which the analyzed repository was checked out."
+    required: false
+    default: ${{ github.workspace }}
+  token:
+    default: ${{ github.token }}
+outputs:
+  start-at:
+    description: 'Start at'
+  status:
+    description: 'Status'
+runs:
+  using: 'node20'
+  main: '../lib/upload-pixee-action.js'
