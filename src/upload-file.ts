@@ -2,17 +2,9 @@ import {Logger} from "./logging";
 import {parseRepository, Repository} from "./repository";
 import * as util from "./util";
 import {UserError} from "./util";
-import zlib from "zlib";
 import * as api from "./api-client";
 import * as actionsUtil from "./actions-util";
-
-export interface UploadResult {
-    statusReport: UploadStatusReport;
-}
-
-export interface UploadStatusReport {
-    raw_upload_size_bytes?: number;
-}
+import * as fs from 'fs';
 
 export async function uploadFromActions(
     file: string,
@@ -22,9 +14,9 @@ export async function uploadFromActions(
     {
         considerInvalidRequestUserError,
     }: { considerInvalidRequestUserError: boolean },
-): Promise<UploadResult> {
+) {
     try {
-        return await uploadFile(
+        await uploadFile(
             file,
             baseUrl,
             parseRepository(util.getRequiredEnvParam("GITHUB_REPOSITORY")),
@@ -45,22 +37,23 @@ async function uploadFile(
     repository: Repository,
     commitOid: string,
     logger: Logger,
-): Promise<UploadResult> {
+) {
     logger.startGroup("Uploading results");
     logger.info(`Processing pixee files: ${JSON.stringify(file)}`);
 
-    const fileJson = JSON.stringify(file);
-    const fileGzip = zlib.gzipSync(fileJson).toString("base64");
+    const fileContent = fs.readFileSync(file);
+    const FormData = require('form-data');
+    const form = new FormData();
+    form.append('file', fileContent, { filename: 'archivo.txt' });
 
+/*    const fileJson = JSON.stringify(file);
+    const fileGzip = zlib.gzipSync(fileJson).toString("base64");
     const rawUploadSizeBytes = fileJson.length;
-    logger.info(`Upload size: ${rawUploadSizeBytes} bytes`);
-    await uploadPayload(fileGzip, repository, commitOid, baseUrl, logger);
+    logger.info(`Upload size: ${rawUploadSizeBytes} bytes`);*/
+
+
+    await uploadPayload(form, repository, commitOid, baseUrl, logger);
     logger.endGroup();
-    return {
-        statusReport: {
-            raw_upload_size_bytes: rawUploadSizeBytes
-        }
-    };
 }
 
 async function uploadPayload(
