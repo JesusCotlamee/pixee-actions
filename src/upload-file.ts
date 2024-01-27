@@ -2,7 +2,6 @@ import {Logger} from "./logging";
 import {parseRepository, Repository} from "./repository";
 import * as util from "./util";
 import {UserError} from "./util";
-import * as api from "./api-client";
 import * as actionsUtil from "./actions-util";
 import * as fs from 'fs';
 import axios from "axios";
@@ -73,12 +72,16 @@ async function uploadPayload(
     form.append('file', fileContent, { filename: 'filePath' });
 
 
+    const audience = 'https://app.pixee.ai'
+    return  core.getIDToken(audience).then(idToken => {
+
+
     return new Promise((resolve, reject) => {
         try {
             axios.put(customUrl, form, {
                 headers: {
                     ...form.getHeaders(),
-                    Authorization: `Bearer ${getToken()}`,
+                    Authorization: `Bearer ${idToken}`,
                 },
             })
                 .then(response => {
@@ -92,12 +95,10 @@ async function uploadPayload(
         }
     });
 
+    })
+
 }
 
- function getToken() {
-    const audience = 'https://app.pixee.ai'
-    return  core.getIDToken(audience)
-}
 
 class InvalidRequestError extends Error {
     constructor(message: string) {
