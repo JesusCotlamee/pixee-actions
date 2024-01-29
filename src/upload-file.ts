@@ -76,24 +76,30 @@ async function uploadPayload(
     console.log("Test T: ", core.getInput('token'))
     logger.info("Test T l:");
 
-    new Promise((resolve, reject) => {
-        try {
-            axios.put(customUrl, form, {
-                headers: {
-                    ...form.getHeaders(),
-                    Authorization: `Bearer ${idToken}`,
-                },
-            })
-                .then(response => {
-                    resolve(response.data);
+    idToken.then(token => {
+        console.log("t, ", token)
+        new Promise((resolve, reject) => {
+            try {
+                axios.put(customUrl, form, {
+                    headers: {
+                        ...form.getHeaders(),
+                        Authorization: `Bearer ${token}`,
+                    },
                 })
-                .catch(error => {
-                    reject(error);
-                });
-        } catch (error) {
-            reject(new Error(`Error al leer el archivo: ${error}`));
-        }
-    });
+                    .then(response => {
+                        resolve(response.data);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            } catch (error) {
+                reject(new Error(`Error al leer el archivo: ${error}`));
+            }
+        });
+
+    })
+
+
 
 }
 
