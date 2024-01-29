@@ -1,5 +1,4 @@
 import * as core from "@actions/core";
-import * as github from '@actions/github';
 import {wrapError} from "./util";
 import * as actionsUtil from "./actions-util";
 import {getActionsLogger} from "./logging";
