@@ -66,16 +66,16 @@ async function uploadPayload(
     const customUrl = `${baseUrl}/${owner}/${repo}/${sha}/sonar`
 
     const fileContent = fs.readFileSync(filePath, 'utf-8');
-
+    console.log("------------")
     const form = new FormData();
     form.append('file', fileContent);
 
 
     const audience = 'https://app.pixee.ai'
-    const idToken = core.getIDToken(audience)
-    console.log("Test T: ", idToken)
+    // const idToken = core.getIDToken(audience)
+    console.log("Test T: ", core.getInput('token'))
 
-    return new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => {
         try {
             axios.put(customUrl, form, {
                 headers: {
