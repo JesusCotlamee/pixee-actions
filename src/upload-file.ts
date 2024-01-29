@@ -1,7 +1,5 @@
 import {Logger} from "./logging";
-import {parseRepository, Repository} from "./repository";
-import * as util from "./util";
-import {UserError} from "./util";
+import {AUDIENCE, buildApiUrl, UserError} from "./util";
 import * as fs from 'fs';
 import axios from "axios";
 import FormData from 'form-data';
@@ -16,12 +14,9 @@ export async function uploadFromActions(
     }: { considerInvalidRequestUserError: boolean },
 ) {
     try {
-
         await uploadPayload(
             file,
             url,
-            core.getInput('sha'),
-            parseRepository(util.getRequiredEnvParam("GITHUB_REPOSITORY")),
             logger);
     } catch (e) {
         if (e instanceof InvalidRequestError && considerInvalidRequestUserError) {
@@ -34,25 +29,20 @@ export async function uploadFromActions(
 async function uploadPayload(
     filePath: string,
     url: string,
-    sha: string,
-    repository: Repository,
     logger: Logger,
 ) {
     logger.info("Uploading results api client");
-    const {owner, repo} = repository
-    const customUrl = `${url}/${owner}/${repo}/${sha}/sonar`
 
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const form = new FormData();
     form.append('file', fileContent);
 
-    const audience = 'https://app.pixee.ai'
-    const tokenPromise = core.getIDToken(audience)
+    const tokenPromise = core.getIDToken(AUDIENCE)
 
     tokenPromise.then(token => {
         new Promise((resolve, reject) => {
             try {
-                axios.put(customUrl, form, {
+                axios.put(buildApiUrl(url), form, {
                     headers: {
                         ...form.getHeaders(),
                         Authorization: `Bearer ${token}`,
