@@ -17,7 +17,6 @@ export async function uploadFromActions(
         await uploadPayload(
             file,
             url,
-            core.getInput('sha'),
             logger);
     } catch (e) {
         if (e instanceof InvalidRequestError && considerInvalidRequestUserError) {
@@ -30,7 +29,6 @@ export async function uploadFromActions(
 async function uploadPayload(
     filePath: string,
     url: string,
-    sha: string,
     logger: Logger,
 ) {
     logger.info("Uploading results api client");
@@ -40,13 +38,10 @@ async function uploadPayload(
     form.append('file', fileContent);
     const tokenPromise = core.getIDToken(AUDIENCE)
 
-    const api = buildApiUrl(url);
-    console.log(api)
-
     tokenPromise.then(token => {
         new Promise((resolve, reject) => {
             try {
-                axios.put(api, form, {
+                axios.put(buildApiUrl(url), form, {
                     headers: {
                         ...form.getHeaders(),
                         Authorization: `Bearer ${token}`,

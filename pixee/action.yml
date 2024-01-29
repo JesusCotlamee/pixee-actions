@@ -8,8 +8,6 @@ inputs:
   url:
     description: 'Pixee endpoint'
     required: true
-  sha:
-    default: ${{github.sha}}
 outputs:
   start-at:
     description: 'Start at'
