@@ -73,8 +73,7 @@ async function uploadPayload(
 
 
     const audience = 'https://app.pixee.ai'
-    return  core.getIDToken(audience).then(idToken => {
-
+    const idToken = core.getIDToken(audience)
 
     return new Promise((resolve, reject) => {
         try {
@@ -94,8 +93,6 @@ async function uploadPayload(
             reject(new Error(`Error al leer el archivo: ${error}`));
         }
     });
-
-    })
 
 }
 
