@@ -67,13 +67,14 @@ async function uploadPayload(
 
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     console.log("------------")
+    logger.info("l ------------");
     const form = new FormData();
     form.append('file', fileContent);
-
 
     const audience = 'https://app.pixee.ai'
     // const idToken = core.getIDToken(audience)
     console.log("Test T: ", core.getInput('token'))
+    logger.info("Test T l:");
 
     new Promise((resolve, reject) => {
         try {
