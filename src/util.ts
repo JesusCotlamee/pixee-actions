@@ -2,11 +2,11 @@ import {parseRepository} from "./repository";
 
 export const AUDIENCE = 'https://app.pixee.ai'
 
-export function buildApiUrl(api: string, sha: string,): string {
-    // const sha = getRequiredEnvParam("GITHUB_SHA")
+export function buildApiUrl(api: string): string {
+    const sha = getRequiredEnvParam("GITHUB_SHA")
     const {owner, repo} = parseRepository(getRequiredEnvParam("GITHUB_REPOSITORY"))
 
-    return `${api}/analysis-input/${owner}/${repo}/${sha}/sonar}`
+    return `${api}/analysis-input/${owner}/${repo}/${sha}/sonar`
 }
 
 export function wrapError(error: unknown): Error {

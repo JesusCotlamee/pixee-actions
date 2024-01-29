@@ -38,10 +38,9 @@ async function uploadPayload(
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const form = new FormData();
     form.append('file', fileContent);
-    console.log("AUDIENCE", AUDIENCE)
     const tokenPromise = core.getIDToken(AUDIENCE)
 
-    const api = buildApiUrl(url, sha);
+    const api = buildApiUrl(url);
     console.log(api)
 
     tokenPromise.then(token => {
