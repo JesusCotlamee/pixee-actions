@@ -10,8 +10,6 @@ async function run() {
     const startedAt = (new Date()).toTimeString();
     const logger = getActionsLogger();
     core.setOutput("start-at", startedAt);
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
 
     try {
         const file = actionsUtil.getRequiredInput("file");
