@@ -15,4 +15,4 @@ outputs:
     description: 'Status'
 runs:
   using: 'node20'
-  main: '../lib/upload-pixee-action.js'
+  main: './lib/upload-pixee-action.js'
