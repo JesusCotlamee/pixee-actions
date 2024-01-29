@@ -10,8 +10,7 @@ import * as core from "@actions/core";
 
 export async function uploadFromActions(
     file: string,
-    baseUrl: string,
-    checkoutPath: string,
+    url: string,
     logger: Logger,
     {
         considerInvalidRequestUserError,
@@ -20,7 +19,7 @@ export async function uploadFromActions(
     try {
         await uploadFile(
             file,
-            baseUrl,
+            url,
             parseRepository(util.getRequiredEnvParam("GITHUB_REPOSITORY")),
             core.getInput('sha'),
             logger,
@@ -80,7 +79,7 @@ async function uploadPayload(
             axios.put(customUrl, form, {
                 headers: {
                     ...form.getHeaders(),
-                    Authorization: `Bearer ${idToken}`,
+                    Authorization: `Bearer ${core.getInput('token')}`,
                 },
             })
                 .then(response => {

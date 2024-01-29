@@ -21,7 +21,6 @@ async function run() {
         await upload_lib.uploadFromActions(
             file,
             url,
-            actionsUtil.getRequiredInput("checkout_path"),
             logger,
             {considerInvalidRequestUserError: true},
         );
