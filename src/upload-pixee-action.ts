@@ -11,12 +11,11 @@ async function run() {
     const logger = getActionsLogger();
     core.setOutput("start-at", startedAt);
     const payload = JSON.stringify(github.context.payload, undefined, 2)
-    // console.log(`The event payload: ${payload}`);
+    console.log(`The event payload: ${payload}`);
 
     try {
         const file = actionsUtil.getRequiredInput("file");
         const url = actionsUtil.getRequiredInput("url");
-        console.log(`File name: ${file}, pixee url: ${url}`);
 
         await upload_lib.uploadFromActions(
             file,

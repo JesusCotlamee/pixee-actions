@@ -10,7 +10,6 @@ export function parseRepository(input: string): Repository {
     if (parts.length !== 2) {
         throw new UserError(`"${input}" is not a valid repository name`);
     }
-    console.log('parts: ', parts)
     return {
         owner: parts[0],
         repo: parts[1],

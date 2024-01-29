@@ -8,9 +8,6 @@ inputs:
   url:
     description: 'Pixee endpoint'
     required: true
-  token:
-    required: true
-#    default: ${{ github.token }}
   sha:
     default: ${{github.sha}}
 outputs:

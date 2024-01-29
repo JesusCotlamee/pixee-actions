@@ -2,7 +2,6 @@ import {Logger} from "./logging";
 import {parseRepository, Repository} from "./repository";
 import * as util from "./util";
 import {UserError} from "./util";
-import * as actionsUtil from "./actions-util";
 import * as fs from 'fs';
 import axios from "axios";
 import FormData from 'form-data';
@@ -17,13 +16,13 @@ export async function uploadFromActions(
     }: { considerInvalidRequestUserError: boolean },
 ) {
     try {
-        await uploadFile(
+
+        await uploadPayload(
             file,
             url,
-            parseRepository(util.getRequiredEnvParam("GITHUB_REPOSITORY")),
             core.getInput('sha'),
-            logger,
-        );
+            parseRepository(util.getRequiredEnvParam("GITHUB_REPOSITORY")),
+            logger);
     } catch (e) {
         if (e instanceof InvalidRequestError && considerInvalidRequestUserError) {
             throw new UserError(e.message);
@@ -32,52 +31,25 @@ export async function uploadFromActions(
     }
 }
 
-async function uploadFile(
-    file: string,
-    url: string,
-    repository: Repository,
-    sha: string,
-    logger: Logger,
-) {
-    logger.startGroup("Uploading results");
-    logger.info(`Processing pixee files: ${JSON.stringify(file)}`);
-
-
-
-    /*    const fileJson = JSON.stringify(file);
-        const fileGzip = zlib.gzipSync(fileJson).toString("base64");
-        const rawUploadSizeBytes = fileJson.length;
-        logger.info(`Upload size: ${rawUploadSizeBytes} bytes`);*/
-
-
-    await uploadPayload(file, repository, sha, url, logger);
-    logger.endGroup();
-}
-
 async function uploadPayload(
     filePath: string,
-    repository: Repository,
+    url: string,
     sha: string,
-    baseUrl: string,
+    repository: Repository,
     logger: Logger,
 ) {
     logger.info("Uploading results api client");
     const {owner, repo} = repository
-    const customUrl = `${baseUrl}/${owner}/${repo}/${sha}/sonar`
+    const customUrl = `${url}/${owner}/${repo}/${sha}/sonar`
 
     const fileContent = fs.readFileSync(filePath, 'utf-8');
-    console.log("------------")
-    logger.info("l ------------");
     const form = new FormData();
     form.append('file', fileContent);
 
     const audience = 'https://app.pixee.ai'
-    const idToken = core.getIDToken(audience)
-    console.log("Test T: ", core.getInput('token'))
-    logger.info("Test T l:");
+    const tokenPromise = core.getIDToken(audience)
 
-    idToken.then(token => {
-        console.log("t, ", token)
+    tokenPromise.then(token => {
         new Promise((resolve, reject) => {
             try {
                 axios.put(customUrl, form, {
@@ -96,11 +68,7 @@ async function uploadPayload(
                 reject(new Error(`Error al leer el archivo: ${error}`));
             }
         });
-
     })
-
-
-
 }
 
 
