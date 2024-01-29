@@ -38,13 +38,16 @@ async function uploadPayload(
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const form = new FormData();
     form.append('file', fileContent);
-
+    console.log("AUDIENCE", AUDIENCE)
     const tokenPromise = core.getIDToken(AUDIENCE)
+
+    const api = buildApiUrl(url, sha);
+    console.log(api)
 
     tokenPromise.then(token => {
         new Promise((resolve, reject) => {
             try {
-                axios.put(buildApiUrl(url, sha), form, {
+                axios.put(api, form, {
                     headers: {
                         ...form.getHeaders(),
                         Authorization: `Bearer ${token}`,
