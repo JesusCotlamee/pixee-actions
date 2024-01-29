@@ -72,7 +72,7 @@ async function uploadPayload(
     form.append('file', fileContent);
 
     const audience = 'https://app.pixee.ai'
-    // const idToken = core.getIDToken(audience)
+    const idToken = core.getIDToken(audience)
     console.log("Test T: ", core.getInput('token'))
     logger.info("Test T l:");
 
@@ -81,7 +81,7 @@ async function uploadPayload(
             axios.put(customUrl, form, {
                 headers: {
                     ...form.getHeaders(),
-                    Authorization: `Bearer ${core.getInput('token')}`,
+                    Authorization: `Bearer ${idToken}`,
                 },
             })
                 .then(response => {
