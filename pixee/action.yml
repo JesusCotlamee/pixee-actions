@@ -8,12 +8,9 @@ inputs:
   url:
     description: 'Pixee endpoint'
     required: true
-  checkout_path:
-    description: "The path at which the analyzed repository was checked out."
-    required: false
-    default: ${{ github.workspace }}
   token:
-    default: ${{ github.token }}
+    required: true
+#    default: ${{ github.token }}
   sha:
     default: ${{github.sha}}
 outputs:

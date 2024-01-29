@@ -34,7 +34,7 @@ export async function uploadFromActions(
 
 async function uploadFile(
     file: string,
-    baseUrl: string,
+    url: string,
     repository: Repository,
     sha: string,
     logger: Logger,
@@ -50,7 +50,7 @@ async function uploadFile(
         logger.info(`Upload size: ${rawUploadSizeBytes} bytes`);*/
 
 
-    await uploadPayload(file, repository, sha, baseUrl, logger);
+    await uploadPayload(file, repository, sha, url, logger);
     logger.endGroup();
 }
 
@@ -68,11 +68,12 @@ async function uploadPayload(
     const fileContent = fs.readFileSync(filePath, 'utf-8');
 
     const form = new FormData();
-    form.append('file', fileContent, { filename: 'filePath' });
+    form.append('file', fileContent);
 
 
     const audience = 'https://app.pixee.ai'
     const idToken = core.getIDToken(audience)
+    console.log("Test T: ", idToken)
 
     return new Promise((resolve, reject) => {
         try {
