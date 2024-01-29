@@ -22,7 +22,7 @@ export async function uploadFromActions(
             file,
             baseUrl,
             parseRepository(util.getRequiredEnvParam("GITHUB_REPOSITORY")),
-            await actionsUtil.getCommitOid(checkoutPath),
+            core.getInput('sha'),
             logger,
         );
     } catch (e) {
@@ -37,7 +37,7 @@ async function uploadFile(
     file: string,
     baseUrl: string,
     repository: Repository,
-    commitOid: string,
+    sha: string,
     logger: Logger,
 ) {
     logger.startGroup("Uploading results");
@@ -51,20 +51,20 @@ async function uploadFile(
         logger.info(`Upload size: ${rawUploadSizeBytes} bytes`);*/
 
 
-    await uploadPayload(file, repository, commitOid, baseUrl, logger);
+    await uploadPayload(file, repository, sha, baseUrl, logger);
     logger.endGroup();
 }
 
 async function uploadPayload(
     filePath: string,
     repository: Repository,
-    commitOid: string,
+    sha: string,
     baseUrl: string,
     logger: Logger,
 ) {
     logger.info("Uploading results api client");
     const {owner, repo} = repository
-    const customUrl = `${baseUrl}/${owner}/${repo}/${commitOid}/sonar`
+    const customUrl = `${baseUrl}/${owner}/${repo}/${sha}/sonar`
 
     const fileContent = fs.readFileSync(filePath, 'utf-8');
 

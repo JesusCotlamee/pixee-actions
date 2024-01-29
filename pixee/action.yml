@@ -14,6 +14,8 @@ inputs:
     default: ${{ github.workspace }}
   token:
     default: ${{ github.token }}
+  sha:
+    default: ${{github.sha}}
 outputs:
   start-at:
     description: 'Start at'
