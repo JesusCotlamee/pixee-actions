@@ -4,10 +4,10 @@ import * as fs from 'fs';
 import axios from "axios";
 import FormData from 'form-data';
 import * as core from "@actions/core";
+import {UploadInputs} from "./upload-inputs";
 
 export async function uploadFromActions(
-    file: string,
-    url: string,
+    inputs: UploadInputs,
     logger: Logger,
     {
         considerInvalidRequestUserError,
@@ -15,8 +15,7 @@ export async function uploadFromActions(
 ) {
     try {
         await uploadPayload(
-            file,
-            url,
+            inputs,
             logger);
     } catch (e) {
         if (e instanceof InvalidRequestError && considerInvalidRequestUserError) {
@@ -27,13 +26,12 @@ export async function uploadFromActions(
 }
 
 async function uploadPayload(
-    filePath: string,
-    url: string,
+    inputs: UploadInputs,
     logger: Logger,
 ) {
     logger.info("Uploading results api client");
 
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const fileContent = fs.readFileSync(inputs.file, 'utf-8');
     const form = new FormData();
     form.append('file', fileContent);
     const tokenPromise = core.getIDToken(AUDIENCE)
@@ -41,7 +39,7 @@ async function uploadPayload(
     tokenPromise.then(token => {
         new Promise((resolve, reject) => {
             try {
-                axios.put(buildApiUrl(url), form, {
+                axios.put(buildApiUrl(inputs), form, {
                     headers: {
                         ...form.getHeaders(),
                         Authorization: `Bearer ${token}`,
@@ -54,7 +52,7 @@ async function uploadPayload(
                         reject(error);
                     });
             } catch (error) {
-                reject(new Error(`Error al leer el archivo: ${error}`));
+                reject(new Error(`Error file: ${error}`));
             }
         });
     })

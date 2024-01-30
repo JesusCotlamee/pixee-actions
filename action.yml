@@ -1,13 +1,17 @@
-name: 'Upload file'
+name: 'Upload file pixee'
 description: 'Pixee action upload file'
 author: 'Pixee'
 inputs:
   file:
-    description: 'File'
+    description: 'File to be uploaded.'
     required: true
   url:
-    description: 'Pixee endpoint'
+    description: 'Endpoint URL where the file will be uploaded.'
     required: true
+  tool:
+    description: 'Specific property identifying the tool or service related to the uploaded file.'
+    default: 'sonar'
+    required: false
 outputs:
   start-at:
     description: 'Start at'

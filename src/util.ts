@@ -1,12 +1,17 @@
-import {parseRepository} from "./repository";
+import {UploadInputs} from "./upload-inputs";
 
 export const AUDIENCE = 'https://app.pixee.ai'
 
-export function buildApiUrl(api: string): string {
+export interface Repository {
+    owner: string;
+    repo: string;
+}
+
+export function buildApiUrl(inputs: UploadInputs): string {
     const sha = getRequiredEnvParam("GITHUB_SHA")
     const {owner, repo} = parseRepository(getRequiredEnvParam("GITHUB_REPOSITORY"))
 
-    return `${api}/analysis-input/${owner}/${repo}/${sha}/sonar`
+    return `${inputs.url}/analysis-input/${owner}/${repo}/${sha}/${inputs.tool}`
 }
 
 export function wrapError(error: unknown): Error {
@@ -25,4 +30,15 @@ export function getRequiredEnvParam(paramName: string): string {
         throw new Error(`${paramName} environment variable must be set`);
     }
     return value;
+}
+
+export function parseRepository(input: string): Repository {
+    const parts = input.split("/");
+    if (parts.length !== 2) {
+        throw new UserError(`"${input}" is not a valid repository name`);
+    }
+    return {
+        owner: parts[0],
+        repo: parts[1],
+    };
 }

@@ -1,8 +1,8 @@
 import * as core from "@actions/core";
 import {wrapError} from "./util";
-import * as actionsUtil from "./actions-util";
 import {getActionsLogger} from "./logging";
 import * as upload_lib from "./upload-file";
+import {getInputs} from "./input-helper";
 
 
 async function run() {
@@ -11,12 +11,10 @@ async function run() {
     core.setOutput("start-at", startedAt);
 
     try {
-        const file = actionsUtil.getRequiredInput("file");
-        const url = actionsUtil.getRequiredInput("url");
+        const inputs = getInputs()
 
         await upload_lib.uploadFromActions(
-            file,
-            url,
+            inputs,
             logger,
             {considerInvalidRequestUserError: true},
         );
