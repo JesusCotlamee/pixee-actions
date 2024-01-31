@@ -52,7 +52,7 @@ async function uploadPayload(
                             logger.info(`Response status: ${response.status}`)
                             console.log(`Response status console: ${response.status}`)
 
-                            throw new UserError(`Response status: ${response.status}`)
+                            return Promise.reject(`Response status console: ${response.status}`);
                         }
                     })
                     .catch(error => {
