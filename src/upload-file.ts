@@ -51,7 +51,7 @@ async function uploadPayload(
                             logger.info(`Response status: ${response.status}`)
                             console.log(`Response status: ${response.status}`)
 
-                            wrapError(`Response status: ${response.status}`)
+                            throw wrapError(`Response status: ${response.status}`)
                         }
                     })
                     .catch(error => {
