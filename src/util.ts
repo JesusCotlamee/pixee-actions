@@ -13,7 +13,7 @@ export function buildApiUrl(inputs: UploadInputs): string {
     const sha = getRequiredEnvParam("GITHUB_SHA")
     const {owner, repo} = parseRepository(getRequiredEnvParam("GITHUB_REPOSITORY"))
 
-    const customUrl = url ? url : PIXEE_SAMBOX_URL
+    const customUrl = url ?? PIXEE_SAMBOX_URL
     console.log("url: ", url)
     console.log("customUrl: ", customUrl)
     return `${customUrl}/analysis-input/${owner}/${repo}/${sha}/${tool}`
