@@ -47,8 +47,12 @@ async function uploadPayload(
                     },
                 })
                     .then(response => {
-                        logger.info(`Response status: ${response.status}`)
-                        console.log(`Response status: ${response.status}`)
+                        if (response.status == 204){
+                            logger.info(`Response status: ${response.status}`)
+                            console.log(`Response status: ${response.status}`)
+
+                            wrapError(`Response status: ${response.status}`)
+                        }
                     })
                     .catch(error => {
 
