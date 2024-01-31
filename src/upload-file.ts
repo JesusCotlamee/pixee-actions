@@ -1,10 +1,11 @@
 import {Logger} from "./logging";
-import {buildApiUrl, UserError} from "./util";
+import {buildApiUrl, UserError, wrapError} from "./util";
 import * as fs from 'fs';
 import axios from "axios";
 import FormData from 'form-data';
 import * as core from "@actions/core";
 import {UploadInputs} from "./upload-inputs";
+import {error} from "@actions/core";
 
 const AUDIENCE = 'https://app.pixee.ai'
 const UTF = 'utf-8'
@@ -38,7 +39,6 @@ async function uploadPayload(
     const tokenPromise = core.getIDToken(AUDIENCE)
 
     tokenPromise.then(token => {
-        new Promise((resolve, reject) => {
             try {
                 axios.put(buildApiUrl(inputs), form, {
                     headers: {
@@ -49,14 +49,16 @@ async function uploadPayload(
                     .then(response => {
                         logger.info(`Response status: ${response.status}`)
                         console.log(`Response status: ${response.status}`)
-                        resolve(response.data);
                     })
                     .catch(error => {
-                        reject(error);
+
                     });
             } catch (error) {
-                reject(new UserError(`Error file: ${error}`));
+                wrapError(error)
             }
-        });
+        }
+
+            ).catch(error => {
+        wrapError(error)
     })
 }
