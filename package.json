@@ -2,7 +2,6 @@
   "name": "upload-file-pixee",
   "version": "1.0.0",
   "description": "",
-  "main": "src/upload-pixee-action.ts",
   "scripts": {
     "build": "tsc --build"
   },
