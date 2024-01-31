@@ -56,13 +56,13 @@ async function uploadPayload(
                     .catch(error => {
                         console.log("Test error")
                         logger.error('Error logger')
-                        new UserError(`Response status: ${error}`)
+                        throw new UserError(`Response status: ${error}`)
                     });
             } catch (error) {
-                new UserError(`Response status: ${error}`)
+                throw new UserError(`Response status: ${error}`)
             }
         }
     ).catch(error => {
-         new UserError(`Response status: ${error}`)
+        throw  new UserError(`Response status: ${error}`)
     })
 }
