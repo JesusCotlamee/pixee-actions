@@ -49,13 +49,13 @@ async function uploadPayload(
                     .then(response => {
                         if (response.status == 204){
                             logger.info(`Response status: ${response.status}`)
-                            console.log(`Response status: ${response.status}`)
+                            console.log(`Response status console: ${response.status}`)
 
                             throw new UserError(`Response status: ${response.status}`)
                         }
                     })
                     .catch(error => {
-
+                        console.log("Test error")
                     });
             } catch (error) {
                 wrapError(error)
