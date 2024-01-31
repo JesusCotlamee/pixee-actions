@@ -56,7 +56,7 @@ async function uploadPayload(
                     })
                     .catch(error => {
                         console.log("Test error")
-                        throw wrapError(error)
+                        throw new UserError(`Response status: ${error}`)
                     });
             } catch (error) {
                 wrapError(error)
