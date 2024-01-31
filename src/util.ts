@@ -1,7 +1,5 @@
 import {UploadInputs} from "./upload-inputs";
 
-export const AUDIENCE = 'https://app.pixee.ai'
-
 export interface Repository {
     owner: string;
     repo: string;
@@ -12,16 +10,6 @@ export function buildApiUrl(inputs: UploadInputs): string {
     const {owner, repo} = parseRepository(getRequiredEnvParam("GITHUB_REPOSITORY"))
 
     return `${inputs.url}/analysis-input/${owner}/${repo}/${sha}/${inputs.tool}`
-}
-
-export function wrapError(error: unknown): Error {
-    return error instanceof Error ? error : new Error(String(error));
-}
-
-export class UserError extends Error {
-    constructor(message: string) {
-        super(message);
-    }
 }
 
 export function getRequiredEnvParam(paramName: string): string {
@@ -41,4 +29,14 @@ export function parseRepository(input: string): Repository {
         owner: parts[0],
         repo: parts[1],
     };
+}
+
+export function wrapError(error: unknown): Error {
+    return error instanceof Error ? error : new Error(String(error));
+}
+
+export class UserError extends Error {
+    constructor(message: string) {
+        super(message);
+    }
 }

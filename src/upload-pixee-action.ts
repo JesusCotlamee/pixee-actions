@@ -15,8 +15,7 @@ async function run() {
 
         await upload_lib.uploadFromActions(
             inputs,
-            logger,
-            {considerInvalidRequestUserError: true},
+            logger
         );
 
         core.setOutput("status", "success");
@@ -24,7 +23,6 @@ async function run() {
         const error = wrapError(unwrappedError);
         const message = error.message;
         core.setFailed(message);
-        console.log(error);
         return;
     }
 }
@@ -34,7 +32,7 @@ async function runWrapper() {
         await run();
     } catch (error) {
         core.setFailed(
-            `upload-file action failed: ${wrapError(error).message}`,
+            `Action failed: ${wrapError(error).message}`,
         );
     }
 }
