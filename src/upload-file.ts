@@ -1,11 +1,10 @@
 import {Logger} from "./logging";
-import {buildApiUrl, UserError, wrapError} from "./util";
+import {buildApiUrl, UserError} from "./util";
 import * as fs from 'fs';
 import axios from "axios";
 import FormData from 'form-data';
 import * as core from "@actions/core";
 import {UploadInputs} from "./upload-inputs";
-import {error} from "@actions/core";
 
 const AUDIENCE = 'https://app.pixee.ai'
 const UTF = 'utf-8'
@@ -47,7 +46,7 @@ async function uploadPayload(
                     },
                 })
                     .then(response => {
-                        if (response.status == 204){
+                        if (response.status == 204) {
                             logger.info(`Response status: ${response.status}`)
                             console.log(`Response status console: ${response.status}`)
 
@@ -57,13 +56,13 @@ async function uploadPayload(
                     .catch(error => {
                         console.log("Test error")
                         logger.error('Error logger')
-                        throw new UserError(`Response status: ${error}`)                    });
+                        throw new UserError(`Response status: ${error}`)
+                    });
             } catch (error) {
-                wrapError(error)
+                throw new UserError(`Response status: ${error}`)
             }
         }
-
-            ).catch(error => {
-        wrapError(error)
+    ).catch(error => {
+        throw new UserError(`Response status: ${error}`)
     })
 }
