@@ -14,7 +14,7 @@ export async function uploadFromActions(
     logger: Logger
 ) {
     try {
-        await uploadPayload(
+         uploadPayload(
             inputs,
             logger);
     } catch (e) {
@@ -27,7 +27,7 @@ export async function uploadFromActions(
     }
 }
 
-async function uploadPayload(
+ function uploadPayload(
     inputs: UploadInputs,
     logger: Logger,
 ) {
@@ -52,7 +52,7 @@ async function uploadPayload(
                             logger.info(`Response status: ${response.status}`)
                             console.log(`Response status console: ${response.status}`)
 
-                            return Promise.reject(`Response status console: ${response.status}`);
+                            throw new UserError(`Response status: ${response.status}`)
                         }
                     })
                     .catch(error => {
