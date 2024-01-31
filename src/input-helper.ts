@@ -2,13 +2,13 @@ import * as core from '@actions/core'
 import {UploadInputs} from './upload-inputs'
 import {UserError} from "./util";
 
-export type Inputs = 'file' | 'url' | 'tool'
+export type Inputs = 'file' | 'url' | 'tool' | 'test'
 
 /**
  * Helper to get all the inputs for the action
  */
 export function getInputs(): UploadInputs {
-    const file = getRequiredInput('file');
+    const file = getRequiredInput('test');
     const url = getRequiredInput('url');
     const tool = getRequiredInput('tool');
 
