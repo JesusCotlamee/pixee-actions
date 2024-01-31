@@ -15,7 +15,6 @@ export function getInputs(): UploadInputs {
     return {file, url, tool} as UploadInputs
 }
 
-
 const getRequiredInput = function (name: Inputs): string {
     const value = core.getInput(name);
     if (!value) {

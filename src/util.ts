@@ -1,4 +1,5 @@
 import {UploadInputs} from "./upload-inputs";
+import * as core from "@actions/core";
 
 export interface Repository {
     owner: string;
@@ -33,6 +34,13 @@ export function parseRepository(input: string): Repository {
 
 export function wrapError(error: unknown): Error {
     return error instanceof Error ? error : new Error(String(error));
+}
+
+export function buildError(unwrappedError: unknown) {
+    const error = wrapError(unwrappedError);
+    const message = error.message;
+    core.setFailed(message);
+    return;
 }
 
 export class UserError extends Error {
