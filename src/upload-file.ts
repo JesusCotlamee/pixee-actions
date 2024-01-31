@@ -1,4 +1,4 @@
-import {buildApiUrl, buildError, UserError} from "./util";
+import {buildApiUrl, buildError} from "./util";
 import * as fs from 'fs';
 import axios from "axios";
 import FormData from 'form-data';
@@ -8,26 +8,7 @@ import {UploadInputs} from "./upload-inputs";
 const AUDIENCE = 'https://app.pixee.ai'
 const UTF = 'utf-8'
 
-export async function uploadFromActions(
-    inputs: UploadInputs
-) {
-    try {
-        uploadPayload(inputs);
-    } catch (e) {
-        if (e instanceof UserError) {
-            core.error('Error logger 4')
-            throw new UserError(e.message);
-        }
-        core.error('Error logger 5')
-        throw e;
-    }
-}
-
-function uploadPayload(
-    inputs: UploadInputs
-) {
-    core.info("Uploading results api client");
-
+export function uploadFromActions(inputs: UploadInputs) {
     const fileContent = fs.readFileSync(inputs.file, UTF);
     const form = new FormData();
     form.append('file', fileContent);
@@ -43,7 +24,7 @@ function uploadPayload(
                     },
                 })
                     .then(response => {
-                        if (response.status == 204) {
+                        if (response.status != 204) {
                             core.setFailed(`Failed response status: ${response.status}`);
                             return
                         }

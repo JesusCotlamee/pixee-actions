@@ -8,7 +8,7 @@ export type Inputs = 'file' | 'url' | 'tool'
  * Helper to get all the inputs for the action
  */
 export function getInputs(): UploadInputs {
-    const file = getRequiredInput('file');
+    const file = core.getInput('file');
     const url = getRequiredInput('url');
     const tool = getRequiredInput('tool');
 

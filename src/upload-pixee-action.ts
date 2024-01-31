@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
-import {wrapError} from "./util";
-import * as upload_lib from "./upload-file";
+import {buildError, wrapError} from "./util";
+import * as upload from "./upload-file";
 import {getInputs} from "./input-helper";
 
 
@@ -10,17 +10,11 @@ async function run() {
 
     try {
         const inputs = getInputs()
-
-        await upload_lib.uploadFromActions(
-            inputs
-        );
+        upload.uploadFromActions(inputs);
 
         core.setOutput("status", "success");
-    } catch (unwrappedError) {
-        const error = wrapError(unwrappedError);
-        const message = error.message;
-        core.setFailed(message);
-        return;
+    } catch (error) {
+        buildError(error)
     }
 }
 
@@ -28,9 +22,7 @@ async function runWrapper() {
     try {
         await run();
     } catch (error) {
-        core.setFailed(
-            `Action failed: ${wrapError(error).message}`,
-        );
+        core.setFailed(`Action failed: ${wrapError(error).message}`);
     }
 }
 
