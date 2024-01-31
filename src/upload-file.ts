@@ -1,5 +1,5 @@
 import {Logger} from "./logging";
-import {buildApiUrl, UserError} from "./util";
+import {buildApiUrl, UserError, wrapError} from "./util";
 import * as fs from 'fs';
 import axios from "axios";
 import FormData from 'form-data';
@@ -50,9 +50,12 @@ export async function uploadFromActions(
                     .then(response => {
                         if (response.status == 204) {
                             logger.info(`Response status: ${response.status}`)
+                            core.error(`Response status core: ${response.status}`)
                             console.log(`Response status console: ${response.status}`)
 
-                            throw new UserError(`Response status: ${response.status}`)
+
+                            core.setFailed(`Response status : ${response.status}`);
+                        return
                         }
                     })
                     .catch(error => {
