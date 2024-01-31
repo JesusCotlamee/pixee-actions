@@ -56,9 +56,16 @@ async function uploadPayload(
                         }
                     })
                     .catch(error => {
-                        console.log("Test error")
-                        logger.error('Error logger 1')
-                        throw new UserError(`Response status: ${error}`)
+
+                        if (error instanceof UserError) {
+                            console.log("Test error")
+                            logger.error('Error logger 1')
+                            throw new UserError(error.message);
+                        }
+                        logger.error('Error logger 1.1')
+                        throw error;
+
+
                     });
             } catch (error) {
                 logger.error('Error logger 2')
