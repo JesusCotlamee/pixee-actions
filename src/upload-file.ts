@@ -19,8 +19,10 @@ export async function uploadFromActions(
             logger);
     } catch (e) {
         if (e instanceof UserError) {
+            logger.error('Error logger 4')
             throw new UserError(e.message);
         }
+        logger.error('Error logger 5')
         throw e;
     }
 }
@@ -55,14 +57,16 @@ async function uploadPayload(
                     })
                     .catch(error => {
                         console.log("Test error")
-                        logger.error('Error logger')
+                        logger.error('Error logger 1')
                         throw new UserError(`Response status: ${error}`)
                     });
             } catch (error) {
+                logger.error('Error logger 2')
                 throw new UserError(`Response status: ${error}`)
             }
         }
     ).catch(error => {
+        logger.error('Error logger 3')
         throw  new UserError(`Response status: ${error}`)
     })
 }

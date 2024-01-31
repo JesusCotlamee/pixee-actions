@@ -20,6 +20,7 @@ async function run() {
 
         core.setOutput("status", "success");
     } catch (unwrappedError) {
+        logger.error('Error logger 6')
         const error = wrapError(unwrappedError);
         const message = error.message;
         core.setFailed(message);
