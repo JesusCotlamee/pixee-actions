@@ -1,1 +1,0 @@
-{"version":3,"file":"api-client.js","sourceRoot":"","sources":["../src/api-client.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;AAAA,oDAAsC;AAGtC,SAAgB,UAAU;IACtB,MAAM,QAAQ,GAAG,sBAAsB,CAAA;IACvC,MAAM,KAAK,GAAG,IAAI,CAAC,UAAU,CAAC,QAAQ,CAAC,CAAA;IAEvC,OAAO;QACH,cAAc,EAAE,kBAAkB;QAClC,aAAa,EAAE,UAAU,KAAK,EAAE;KACnC,CAAA;AACL,CAAC;AARD,gCAQC"}

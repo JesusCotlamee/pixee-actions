@@ -16,9 +16,7 @@ export function getInputs(): UploadInputs {
 }
 
 export function getRequiredInput(name: Inputs): string {
-    console.log("name: ", name)
     const value = core.getInput(name);
-    console.log("value: ", value)
     if (!value) {
         throw new UserError(`Input required and not supplied: ${name}`);
     }
