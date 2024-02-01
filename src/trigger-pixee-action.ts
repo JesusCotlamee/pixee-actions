@@ -29,6 +29,7 @@ async function run() {
         console.log("github.context: ", github.context)
 
         const handler = eventHandlers[eventName](action);
+        console.log('handler: ', handler)
         if (handler) {
             console.log("Se ejecuta handler")
             handler();
