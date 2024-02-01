@@ -2,12 +2,12 @@ import {AUDIENCE, buildApiUrl, buildError} from "./util";
 import axios from "axios";
 import * as core from "@actions/core";
 
-export function triggerFromActions(url: string) {
+export function triggerFromActions(url: string, prNumber: number | null) {
     const tokenPromise = core.getIDToken(AUDIENCE)
 
     tokenPromise.then(token => {
         try {
-            axios.post(buildApiUrl(url), null, {
+            axios.post(buildApiUrl(url, prNumber), null, {
                 headers: {
                     contentType: 'application/json',
                     Authorization: `Bearer ${token}`

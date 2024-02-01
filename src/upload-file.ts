@@ -17,7 +17,7 @@ export function uploadFromActions(inputs: UploadInputs) {
     tokenPromise.then(token => {
             try {
                 const {url, tool} = inputs
-                axios.put(buildApiUrl(url, tool, 'upload'), form, {
+                axios.put(buildApiUrl(url, null, tool, 'upload'), form, {
                     headers: {
                         ...form.getHeaders(),
                         Authorization: `Bearer ${token}`,

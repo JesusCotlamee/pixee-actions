@@ -5,14 +5,15 @@ type EndpointType = 'upload' | 'trigger'
 export const AUDIENCE = 'https://app.pixee.ai'
 const PIXEE_SAMBOX_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod'
 
-export function buildApiUrl(url: string, tool?: string, type?: EndpointType) {
+export function buildApiUrl(url: string, prNumber: number | null, tool?: string, type?: EndpointType) {
     const customUrl = url ? url : PIXEE_SAMBOX_URL
     const {owner, repo, number, sha} = getGithubContext()
 
     if (type === 'upload') {
         return `${customUrl}/analysis-input/${owner}/${repo}/${sha}/${tool}`
     }
-    return `${customUrl}/analysis-input/${owner}/${repo}/${number}`
+
+    return `${customUrl}/analysis-input/${owner}/${repo}/${prNumber ?? number}`
 }
 
 function getGithubContext() {

@@ -20,9 +20,9 @@ This action uploads a file to an AWS S3 bucket associated with Pixee.
     - Description: Specific property identifying the tool or service related to the uploaded file.
     - Required: true
     - Options:
-      - `sonar`
-      - `codeql`
-      - `semgrep`
+        - `sonar`
+        - `codeql`
+        - `semgrep`
 
 ### Outputs
 

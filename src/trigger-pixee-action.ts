@@ -2,9 +2,16 @@ import * as core from "@actions/core";
 import {buildError, wrapError} from "./util";
 import * as trigger from "./trigger";
 import * as github from '@actions/github';
+import {getRequiredInput} from "./input-helper";
 
-const EVENT_ACTION = 'opened'
-const EVENT_NAME = 'pull_request'
+const EVENT_ACTION_OPENED = 'opened'
+const EVENT_PULL_REQUEST = 'pull_request';
+const EVENT_WORKFLOW_DISPATCH = 'workflow_dispatch';
+
+const eventHandlers = {
+    [`${EVENT_PULL_REQUEST}_${EVENT_ACTION_OPENED}`]: () => trigger.triggerFromActions(core.getInput('url'), null),
+    [EVENT_WORKFLOW_DISPATCH]: () => trigger.triggerFromActions(core.getInput('url'), parseInt(getRequiredInput('pr-number')))
+};
 
 async function run() {
     const startedAt = (new Date()).toTimeString();
@@ -12,14 +19,16 @@ async function run() {
 
     try {
         const {eventName, payload: {action}} = github.context
+        console.log("github.context: ", github.context)
 
-        if (eventName === EVENT_NAME && action === EVENT_ACTION) {
-            trigger.triggerFromActions(core.getInput('url'));
-
-            core.setOutput("status", "success");
+        const handler = eventHandlers[`${eventName}_${action}`];
+        if (handler) {
+            handler();
         } else {
-            console.log('Invalid event to execute trigger.')
+            console.log('Invalid event to execute trigger.');
         }
+
+        core.setOutput("status", "success");
     } catch (error) {
         buildError(error)
     }
