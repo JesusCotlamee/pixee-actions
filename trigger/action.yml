@@ -1,9 +1,12 @@
-name: 'Trigger pixee'
-description: 'Pixee action trigger'
+name: 'Trigger'
+description: 'Trigger Pixee analysis'
 author: 'Pixee'
 inputs:
   url:
-    description: 'Endpoint URL where the file will be uploaded.'
+    description: 'Endpoint URL where the analysis will be triggered.'
+    required: false
+  pr-number:
+    description: 'PR number to trigger analysis for.'
     required: false
 outputs:
   start-at:
