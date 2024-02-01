@@ -19,6 +19,8 @@ async function run() {
 
     try {
         const {eventName, payload: {action}} = github.context
+        console.log('github.context: ', github.context)
+
         const handler = eventHandlers[eventName];
 
         handler ? handler(action) : core.warning(`Invalid action for ${eventName} event.`);
