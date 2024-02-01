@@ -30,9 +30,10 @@ async function run() {
 
         const handler = eventHandlers[eventName](action);
         if (handler) {
+            console.log("Se ejecuta handler")
             handler();
         } else {
-            console.log('Invalid event to execute trigger.');
+            console.log('Invalid event to execute trigger 1 .');
             return
         }
 
