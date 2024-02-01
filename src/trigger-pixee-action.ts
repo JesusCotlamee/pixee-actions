@@ -13,7 +13,7 @@ const eventHandlers = {
         if (action === EVENT_ACTION_OPENED) {
             trigger.triggerFromActions(core.getInput('url'), null);
         } else {
-            console.log('Invalid action for pull_request event.');
+            console.log('Invalid action for pull_request event 2.');
 
         }
     },
