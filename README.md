@@ -9,25 +9,25 @@ This action uploads a file to an AWS S3 bucket associated with Pixee.
 ### Inputs
 
 - `file`:
-    - Description: File to be uploaded.
-    - Required: true
+  - Description: File to be uploaded.
+  - Required: true
 
 - `url`:
-    - Description: Endpoint URL where the file will be uploaded. (Optional)
-    - Required: false
+  - Description: Endpoint URL where the file will be uploaded. (Optional)
+  - Required: false
 
 - `tool`:
-    - Description: Specific property identifying the tool or service related to the uploaded file.
-    - Required: true
-    - Options:
-        - `sonar`
-        - `codeql`
-        - `semgrep`
+  - Description: Specific property identifying the tool or service related to the uploaded file.
+  - Required: true
+  - Options:
+    - `sonar`
+    - `codeql`
+    - `semgrep`
 
 ### Outputs
 
 - `status`:
-    - Description: Status.
+  - Description: Status.
 
 ### Example Usage
 
@@ -40,8 +40,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Upload file to Pixee
-        uses: pixee/upload-file@main
+        uses: pixee-actions/upload-file@main
         with:
+          url: ${{ secrets.PIXEE_ENDPOINT }}
           file: path/to/your/file
           tool: your-tool-name
 ```
@@ -69,15 +70,38 @@ This action triggers an analysis of pull requests in GitHub using Pixee.
 
 ```yaml
 jobs:
-  trigger-pixee:
+  trigger:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Trigger Pixee analysis
-        uses: pixee/trigger@main
+        uses: pixee-actions/trigger@main
         with:
           url: ${{ secrets.PIXEE_ENDPOINT }}
-          pr-number: ${{ github.event.pull_request.number }}
+          pr-number: your-pr-number
+```
+
+## Composite Usage Example
+
+Here is an example of how you can use the composite action:
+
+```yaml
+jobs:
+  analysis-input:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    name: Upload file and trigger analysis
+    timeout-minutes: 4
+    
+    steps:
+      - uses: pixee-actions/analysis-input@main
+        with:
+          URL: ${{ secrets.PIXEE_ENDPOINT }}
+          FILE: path/to/your/file
+          TOOL: your-tool-name
+          PR_NUMBER: your-pr-number
 ```

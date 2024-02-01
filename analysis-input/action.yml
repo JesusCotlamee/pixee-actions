@@ -1,5 +1,5 @@
-name: ⬆️ Analysis sonar
-description: Analysis sonar
+name: ⬆️ Analysis input
+description: Analysis input
 
 inputs:
   URL:
