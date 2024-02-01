@@ -1,7 +1,6 @@
 import * as core from "@actions/core";
 import {buildError, getGithubContext, wrapError} from "./util";
 import * as trigger from "./trigger";
-import * as github from '@actions/github';
 
 async function run() {
     const startedAt = (new Date()).toTimeString();
@@ -9,14 +8,9 @@ async function run() {
 
     try {
         const {number} = getGithubContext();
-        const  prNumber = core.getInput('pr-number')
+        const prNumber = core.getInput('pr-number')
 
-        console.log('github.context: ', github.context)
-        console.log('getGithubContext number: ', number)
-        console.log('core prNumber: ', prNumber)
-
-        if (number || prNumber){
-            console.log("Success")
+        if (number || prNumber) {
             trigger.triggerFromActions(core.getInput('url'), number ?? prNumber);
             core.setOutput("status", "success");
             return
