@@ -14,7 +14,6 @@ const eventHandlers = {
             trigger.triggerFromActions(core.getInput('url'), null);
         } else {
             console.log('Invalid action for pull_request event 2.');
-
         }
     },
     [EVENT_WORKFLOW_DISPATCH]: () => trigger.triggerFromActions(core.getInput('url'), parseInt(getRequiredInput('pr-number')))
@@ -28,11 +27,11 @@ async function run() {
         const {eventName, payload: {action}} = github.context
         console.log("github.context: ", github.context)
 
-        const handler = eventHandlers[eventName](action);
+        const handler = eventHandlers[eventName];
         console.log('handler: ', handler)
         if (handler) {
             console.log("Se ejecuta handler")
-            handler();
+            handler(action);
         } else {
             console.log('Invalid event to execute trigger 1 .');
             return
