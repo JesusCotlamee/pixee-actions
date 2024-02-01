@@ -16,6 +16,7 @@ async function run() {
         console.log('core prNumber: ', prNumber)
 
         if (number || prNumber){
+            console.log("Success")
             trigger.triggerFromActions(core.getInput('url'), number ?? prNumber);
             core.setOutput("status", "success");
             return
