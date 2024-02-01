@@ -16,7 +16,7 @@ export function buildApiUrl(url: string, prNumber: number | null, tool?: string,
     return `${customUrl}/analysis-input/${owner}/${repo}/${prNumber ?? number}`
 }
 
-function getGithubContext() {
+export function getGithubContext() {
     const {sha, issue: {owner, repo, number}} = github.context
     return {owner, repo, number, sha}
 }

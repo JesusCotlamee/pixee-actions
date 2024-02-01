@@ -1,46 +1,29 @@
 import * as core from "@actions/core";
-import {buildError, wrapError} from "./util";
+import {buildError, getGithubContext, wrapError} from "./util";
 import * as trigger from "./trigger";
 import * as github from '@actions/github';
-import {getRequiredInput} from "./input-helper";
-
-const EVENT_ACTION_OPENED = 'opened'
-const EVENT_PULL_REQUEST = 'pull_request';
-const EVENT_WORKFLOW_DISPATCH = 'workflow_dispatch';
-
-const eventHandlers = {
-    [EVENT_PULL_REQUEST]: (action: string) => handlePullRequestEvent(action),
-    [EVENT_WORKFLOW_DISPATCH]: handleWorkflowDispatchEvent
-};
 
 async function run() {
     const startedAt = (new Date()).toTimeString();
     core.setOutput("start-at", startedAt);
 
     try {
-        const {eventName, payload: {action}} = github.context
+        const {number} = getGithubContext();
+        const  prNumber = core.getInput('pr-number')
+
         console.log('github.context: ', github.context)
+        console.log('getGithubContext: ', getGithubContext)
+        console.log('prNumber: ', prNumber)
 
-        const handler = eventHandlers[eventName];
+        if (number == null && prNumber == null ){
+            core.setFailed("PR number not found. Please provide a valid PR number.");
+        }
 
-        handler ? handler(action) : core.warning(`Invalid action for ${eventName} event.`);
+        trigger.triggerFromActions(core.getInput('url'), parseInt(prNumber));
         core.setOutput("status", "success");
     } catch (error) {
         buildError(error)
     }
-}
-
-function handlePullRequestEvent(action: string) {
-    if (action === EVENT_ACTION_OPENED) {
-        trigger.triggerFromActions(core.getInput('url'), null);
-    } else {
-        core.warning(`Invalid action ${action} for pull request event.`)
-    }
-}
-
-function handleWorkflowDispatchEvent() {
-    const prNumber = parseInt(getRequiredInput('pr-number'));
-    trigger.triggerFromActions(core.getInput('url'), prNumber);
 }
 
 async function runWrapper() {

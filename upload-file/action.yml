@@ -2,12 +2,12 @@ name: 'Upload file'
 description: 'Upload file to Pixee'
 author: 'Pixee'
 inputs:
-  file:
-    description: 'File to be uploaded.'
-    required: true
   url:
     description: 'Endpoint URL where the file will be uploaded.'
     required: false
+  file:
+    description: 'File to be uploaded.'
+    required: true
   tool:
     description: >
       Specific property identifying the tool or service related to the uploaded file.
