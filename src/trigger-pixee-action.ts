@@ -12,15 +12,14 @@ async function run() {
         const  prNumber = core.getInput('pr-number')
 
         console.log('github.context: ', github.context)
-        console.log('getGithubContext: ', getGithubContext().number)
-        console.log('prNumber: ', prNumber)
+        console.log('getGithubContext number: ', number)
+        console.log('core prNumber: ', prNumber)
 
-        if (number == null && prNumber == null ){
-            core.setFailed("PR number not found. Please provide a valid PR number.");
+        if (number || prNumber){
+            trigger.triggerFromActions(core.getInput('url'), number ?? prNumber);
+            core.setOutput("status", "success");
         }
-
-        trigger.triggerFromActions(core.getInput('url'), parseInt(prNumber));
-        core.setOutput("status", "success");
+        core.setFailed("PR number not found. Please provide a valid PR number.");
     } catch (error) {
         buildError(error)
     }
