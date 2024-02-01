@@ -12,7 +12,7 @@ async function run() {
         const  prNumber = core.getInput('pr-number')
 
         console.log('github.context: ', github.context)
-        console.log('getGithubContext: ', getGithubContext)
+        console.log('getGithubContext: ', getGithubContext().number)
         console.log('prNumber: ', prNumber)
 
         if (number == null && prNumber == null ){
