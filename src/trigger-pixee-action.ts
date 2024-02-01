@@ -21,7 +21,7 @@ async function run() {
         const {eventName, payload: {action}} = github.context
         const handler = eventHandlers[eventName];
 
-        handler ? handler(action) : core.notice(`Invalid action for ${eventName} event.`);
+        handler ? handler(action) : core.warning(`Invalid action for ${eventName} event.`);
         core.setOutput("status", "success");
     } catch (error) {
         buildError(error)
@@ -32,7 +32,7 @@ function handlePullRequestEvent(action: string) {
     if (action === EVENT_ACTION_OPENED) {
         trigger.triggerFromActions(core.getInput('url'), null);
     } else {
-        core.notice(`Invalid action "${action}" for pull_request event.`)
+        core.warning(`Invalid action "${action}" for pull_request event.`)
     }
 }
 
