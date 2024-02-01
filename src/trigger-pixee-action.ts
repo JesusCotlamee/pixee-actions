@@ -9,14 +9,8 @@ const EVENT_PULL_REQUEST = 'pull_request';
 const EVENT_WORKFLOW_DISPATCH = 'workflow_dispatch';
 
 const eventHandlers = {
-    [EVENT_PULL_REQUEST]: (action:string) => {
-        if (action === EVENT_ACTION_OPENED) {
-            trigger.triggerFromActions(core.getInput('url'), null);
-        } else {
-            console.log('Invalid action for pull_request event.');
-        }
-    },
-    [EVENT_WORKFLOW_DISPATCH]: () => trigger.triggerFromActions(core.getInput('url'), parseInt(getRequiredInput('pr-number')))
+    [EVENT_PULL_REQUEST]: (action: string) => handlePullRequestEvent(action),
+    [EVENT_WORKFLOW_DISPATCH]: handleWorkflowDispatchEvent
 };
 
 async function run() {
@@ -27,11 +21,24 @@ async function run() {
         const {eventName, payload: {action}} = github.context
         const handler = eventHandlers[eventName];
 
-        handler ? handler(action) : console.log('Invalid event to execute trigger.');
+        handler ? handler(action) : core.notice(`Invalid action for ${eventName} event.`);
         core.setOutput("status", "success");
     } catch (error) {
         buildError(error)
     }
+}
+
+function handlePullRequestEvent(action: string) {
+    if (action === EVENT_ACTION_OPENED) {
+        trigger.triggerFromActions(core.getInput('url'), null);
+    } else {
+        core.notice(`Invalid action "${action}" for pull_request event.`)
+    }
+}
+
+function handleWorkflowDispatchEvent() {
+    const prNumber = parseInt(getRequiredInput('pr-number'));
+    trigger.triggerFromActions(core.getInput('url'), prNumber);
 }
 
 async function runWrapper() {
