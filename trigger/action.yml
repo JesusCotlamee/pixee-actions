@@ -1,18 +1,16 @@
-name: 'Trigger'
-description: 'Trigger Pixee analysis'
-author: 'Pixee'
+name: Trigger
+description: Trigger Pixee analysis
+author: Pixee
 inputs:
   url:
-    description: 'Endpoint URL where the analysis will be triggered.'
+    description: Endpoint URL where the analysis will be triggered.
     required: false
   pr-number:
-    description: 'PR number to trigger analysis for.'
+    description: PR number to trigger analysis for.
     required: false
 outputs:
-  start-at:
-    description: 'Start at'
   status:
-    description: 'Status'
+    description: Status
 runs:
-  using: 'node20'
-  main: '../lib/trigger-pixee-action.js'
+  using: node20
+  main: ../lib/trigger-pixee-action.js

@@ -1,12 +1,12 @@
-name: 'Upload file'
-description: 'Upload file to Pixee'
-author: 'Pixee'
+name: Upload file
+description: Upload file to Pixee
+author: Pixee
 inputs:
   url:
-    description: 'Endpoint URL where the file will be uploaded.'
+    description: Endpoint URL where the file will be uploaded.
     required: false
   file:
-    description: 'File to be uploaded.'
+    description: File to be uploaded.
     required: true
   tool:
     description: >
@@ -14,10 +14,8 @@ inputs:
       Allowed values: 'sonar', 'codeql', 'semgrep'
     required: true
 outputs:
-  start-at:
-    description: 'Start at'
   status:
-    description: 'Status'
+    description: Status
 runs:
-  using: 'node20'
-  main: '../lib/upload-pixee-action.js'
+  using: node20
+  main: ../lib/upload-pixee-action.js
