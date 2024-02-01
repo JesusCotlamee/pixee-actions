@@ -32,7 +32,7 @@ function handlePullRequestEvent(action: string) {
     if (action === EVENT_ACTION_OPENED) {
         trigger.triggerFromActions(core.getInput('url'), null);
     } else {
-        core.warning(`Invalid action "${action}" for pull_request event.`)
+        core.warning(`Invalid action ${action} for pull request event.`)
     }
 }
 
