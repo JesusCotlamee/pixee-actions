@@ -12,10 +12,12 @@ export interface Repository {
 export function buildApiUrl(inputs: UploadInputs): string {
     const {url, tool} = inputs
 
-    const context = github.context
-    console.log("context: ", context)
+    const { sha, } = github.context
+    console.log("context: ", github.context)
+    console.log("context payload repository: ", github.context.payload.repository)
+    console.log("context repo: ", github.context.repo)
 
-    const sha = getRequiredEnvParam("GITHUB_SHA")
+
     const {owner, repo} = parseRepository(getRequiredEnvParam("GITHUB_REPOSITORY"))
 
     const customUrl = url ? url : PIXEE_SAMBOX_URL
