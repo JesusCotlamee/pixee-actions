@@ -1,5 +1,6 @@
 import {UploadInputs} from "./upload-inputs";
 import * as core from "@actions/core";
+import * as github from '@actions/github';
 
 const PIXEE_SAMBOX_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod'
 
@@ -10,6 +11,10 @@ export interface Repository {
 
 export function buildApiUrl(inputs: UploadInputs): string {
     const {url, tool} = inputs
+
+    const context = github.context
+    console.log("context: ", context)
+
     const sha = getRequiredEnvParam("GITHUB_SHA")
     const {owner, repo} = parseRepository(getRequiredEnvParam("GITHUB_REPOSITORY"))
 
