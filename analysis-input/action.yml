@@ -1,0 +1,35 @@
+name: ⬆️ Analysis sonar
+description: Analysis sonar
+
+inputs:
+  URL:
+    description: Endpoint URL where the analysis will be triggered.
+    required: false
+  PR_NUMBER:
+      description: PR number to trigger analysis for.
+      required: false
+  FILE:
+    description: File to be uploaded.
+    required: true
+  TOOL:
+      description: >
+        Specific property identifying the tool or service related to the uploaded file.
+        Allowed values: 'sonar', 'codeql', 'semgrep'
+      required: true
+
+runs:
+  using: "composite"
+  steps:
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Upload file to pixee
+        uses: jesuscotlamee/pixee-actions/upload-file@main
+        with:
+            url: ${{ inputs.URL }}
+            file: ${{ inputs.FILE }}
+            tool: ${{ inputs.TOOL }}
+      - name: Call trigger
+        uses: jesuscotlamee/pixee-actions/trigger@main
+        with:
+            url: ${{ inputs.URL }}
+            pr-number: ${{ inputs.PR_NUMBER }}
