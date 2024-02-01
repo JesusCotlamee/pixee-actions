@@ -1,11 +1,10 @@
-import {buildApiUrl, buildError} from "./util";
+import {AUDIENCE, buildApiUrl, buildError} from "./util";
 import * as fs from 'fs';
 import axios from "axios";
 import FormData from 'form-data';
 import * as core from "@actions/core";
 import {UploadInputs} from "./upload-inputs";
 
-const AUDIENCE = 'https://app.pixee.ai'
 const UTF = 'utf-8'
 
 export function uploadFromActions(inputs: UploadInputs) {
@@ -17,7 +16,8 @@ export function uploadFromActions(inputs: UploadInputs) {
 
     tokenPromise.then(token => {
             try {
-                axios.put(buildApiUrl(inputs), form, {
+                const {url, tool} = inputs
+                axios.put(buildApiUrl(url, tool, 'upload'), form, {
                     headers: {
                         ...form.getHeaders(),
                         Authorization: `Bearer ${token}`,

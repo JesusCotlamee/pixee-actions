@@ -1,15 +1,23 @@
-import {UploadInputs} from "./upload-inputs";
 import * as core from "@actions/core";
 import * as github from '@actions/github';
 
+type EndpointType = 'upload' | 'trigger'
+export const AUDIENCE = 'https://app.pixee.ai'
 const PIXEE_SAMBOX_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod'
 
-export function buildApiUrl(inputs: UploadInputs): string {
-    const {url, tool} = inputs
-    const { sha, repo: { owner, repo}} = github.context
-
+export function buildApiUrl(url: string, tool?: string, type?: EndpointType) {
     const customUrl = url ? url : PIXEE_SAMBOX_URL
-    return `${customUrl}/analysis-input/${owner}/${repo}/${sha}/${tool}`
+    const {owner, repo, number, sha} = getGithubContext()
+
+    if (type === 'upload') {
+        return `${customUrl}/analysis-input/${owner}/${repo}/${sha}/${tool}`
+    }
+    return `${customUrl}/analysis-input/${owner}/${repo}/${number}`
+}
+
+function getGithubContext() {
+    const {sha, issue: {owner, repo, number}} = github.context
+    return {owner, repo, number, sha}
 }
 
 export function wrapError(error: unknown): Error {

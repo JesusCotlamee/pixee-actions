@@ -1,0 +1,15 @@
+name: 'Trigger pixee'
+description: 'Pixee action trigger'
+author: 'Pixee'
+inputs:
+  url:
+    description: 'Endpoint URL where the file will be uploaded.'
+    required: false
+outputs:
+  start-at:
+    description: 'Start at'
+  status:
+    description: 'Status'
+runs:
+  using: 'node20'
+  main: '../lib/trigger-pixee-action.js'
