@@ -10,8 +10,7 @@ inputs:
     required: false
   tool:
     description: 'Specific property identifying the tool or service related to the uploaded file.'
-    required: false
-    default: sonar
+    required: true
 outputs:
   start-at:
     description: 'Start at'
