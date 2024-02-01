@@ -18,6 +18,7 @@ async function run() {
         if (number || prNumber){
             trigger.triggerFromActions(core.getInput('url'), number ?? prNumber);
             core.setOutput("status", "success");
+            return
         }
         core.setFailed("PR number not found. Please provide a valid PR number.");
     } catch (error) {
