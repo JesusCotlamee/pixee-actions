@@ -1,0 +1,47 @@
+name: Upload file and trigger analysis
+
+on:
+  pull_request:
+    types: [ opened ]
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  # Replace <sonar-organization> with the organization retrieved from sonarcloud
+  SONAR_ORGANIZATION: <sonar-organization>
+  # Replace <sonar-project-key> with the project key retrieved from sonarcloud
+  SONAR_PROJECT_KEY: <sonar-project-key>
+
+jobs:
+  analysis-input:
+    runs-on: ubuntu-latest
+    name: Upload file and trigger analysis
+    timeout-minutes: 4
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Replace <sonar-token> with the token retrieved from sonarcloud
+          SONAR_TOKEN: <sonar-token>
+        with:
+          args: >
+            -Dsonar.organization=${{ env.SONAR_ORGANIZATION }}
+            -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+      - name: SonarCloud download
+        shell: bash
+        run: |
+          URL="https://sonarcloud.io/api/issues/search?componentKeys=${{ env.SONAR_PROJECT_KEY }}&pullRequest=${{ github.event.number }}"
+          curl -v "$URL" -o sonar_issues.json
+      - name: Upload file and trigger analysis
+        # Replace <latest-commit> with the latest stable commit available in pixee-actions
+        uses: JesusCotlamee/pixee-actions/analysis-input@<latest-commit>
+        with:
+          FILE: sonar_issues.json
+          # Replace <tool> with the specific property that identifies the tool related to the uploaded file. Allowed values: 'sonar', 'codeql', 'semgrep'
+          TOOL: <tool>
