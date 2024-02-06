@@ -37,7 +37,7 @@ jobs:
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Replace <sonar-token> with the token retrieved from sonarcloud
+          # Replace <sonar-token> with the token retrieved from SonarCloud. Strongly recommend against hard coding the token directly into the workflow file. Instead, use GitHub Secrets to securely store and access sensitive information.
           SONAR_TOKEN: <sonar-token>
         with:
           args: >
