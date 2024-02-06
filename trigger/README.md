@@ -1,6 +1,6 @@
 ## Trigger Pixee Action
 
-This action triggers an analysis of pull requests in GitHub using Pixee.
+This action triggers an analysis of pull requests on GitHub using Pixee.
 
 ### Inputs
 

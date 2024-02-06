@@ -1,7 +1,6 @@
-## Upload File Pixee Action
+## Analysis Input Pixee Action
 
-This action uploads a file to an AWS S3 bucket. Essentially, it facilitates the process of uploading relevant files for
-further processing or reference.
+The composite action combines two key functionalities to further simplify and automate analysis in the development workflow.
 
 ### Inputs
 
@@ -19,6 +18,10 @@ further processing or reference.
 
 - `url`:
     - Description: Endpoint URL where the file will be uploaded. (Optional)
+    - Required: false
+
+- `pr-number`:
+    - Description: PR number to trigger analysis for. (Optional)
     - Required: false
 
 ### Outputs
