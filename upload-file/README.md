@@ -1,33 +1,32 @@
 ## Upload File Pixee Action
 
-This action uploads a file to an AWS S3 bucket. Essentially, it facilitates the process of uploading relevant files for
-further processing or reference.
+This action facilitates the process of uploading files to an AWS S3 bucket for further processing or reference.
 
 ### Inputs
 
 - `file`:
-    - Description: File to be uploaded.
-    - Required: true
+    - **Description:** The file to be uploaded.
+    - **Required:** Yes
 
 - `tool`:
-    - Description: Specific property identifying the tool or service related to the uploaded file.
-    - Required: true
-    - Options:
+    - **Description:** Identifies the tool or service related to the uploaded file.
+    - **Required:** Yes
+    - **Options:**
         - `sonar`
         - `codeql`
         - `semgrep`
 
 - `url`:
-    - Description: Endpoint URL where the file will be uploaded. (Optional)
-    - Required: false
+    - **Description:** The endpoint URL where the file will be uploaded. (Optional)
+    - **Required:** No
 
 ### Outputs
 
 - `status`:
-    - Description: Status.
+    - **Description:** The status of the upload process.
 
 ### Example Usage
 
-See the examples folder for copy/paste usable example workflows.
+For copy/paste usable example workflows, refer to the [examples folder](../examples).
 
-* [Upload file](../examples/upload-file.yml)
+- [Upload file](../examples/upload-file.yml)
