@@ -1,13 +1,7 @@
 name: Analysis input
-description: Analysis input
+description: Upload SonarCloud file and trigger analysis
 
 inputs:
-  URL:
-    description: Endpoint URL where the analysis will be triggered.
-    required: false
-  PR_NUMBER:
-    description: PR number to trigger analysis for.
-    required: false
   FILE:
     description: File to be uploaded.
     required: true
@@ -16,6 +10,12 @@ inputs:
       Specific property that identifies the tool related to the uploaded file.
       Allowed values: 'sonar', 'codeql', 'semgrep'
     required: true
+  URL:
+    description: Endpoint URL where the analysis will be triggered.
+    required: false
+  PR_NUMBER:
+    description: PR number to trigger analysis for.
+    required: false
 
 runs:
   using: "composite"

@@ -1,4 +1,4 @@
-name: Upload file and trigger analysis
+name: Analysis input
 
 on:
   pull_request:
@@ -17,7 +17,7 @@ env:
 jobs:
   analysis-input:
     runs-on: ubuntu-latest
-    name: Upload file and trigger analysis
+    name: Upload SonarCloud file and trigger analysis
     timeout-minutes: 4
 
     steps:
