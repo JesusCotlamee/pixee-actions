@@ -6,28 +6,28 @@ inputs:
     description: Endpoint URL where the analysis will be triggered.
     required: false
   PR_NUMBER:
-      description: PR number to trigger analysis for.
-      required: false
+    description: PR number to trigger analysis for.
+    required: false
   FILE:
     description: File to be uploaded.
     required: true
   TOOL:
-      description: >
-        Specific property that identifies the tool related to the uploaded file.
-        Allowed values: 'sonar', 'codeql', 'semgrep'
-      required: true
+    description: >
+      Specific property that identifies the tool related to the uploaded file.
+      Allowed values: 'sonar', 'codeql', 'semgrep'
+    required: true
 
 runs:
   using: "composite"
   steps:
-      - name: Upload file to pixee
-        uses: jesuscotlamee/pixee-actions/upload-file@main
-        with:
-            url: ${{ inputs.URL }}
-            file: ${{ inputs.FILE }}
-            tool: ${{ inputs.TOOL }}
-      - name: Call trigger
-        uses: jesuscotlamee/pixee-actions/trigger@main
-        with:
-            url: ${{ inputs.URL }}
-            pr-number: ${{ inputs.PR_NUMBER }}
+    - name: Upload file to pixee
+      uses: jesuscotlamee/pixee-actions/upload-file@main
+      with:
+        url: ${{ inputs.URL }}
+        file: ${{ inputs.FILE }}
+        tool: ${{ inputs.TOOL }}
+    - name: Call trigger
+      uses: jesuscotlamee/pixee-actions/trigger@main
+      with:
+        url: ${{ inputs.URL }}
+        pr-number: ${{ inputs.PR_NUMBER }}

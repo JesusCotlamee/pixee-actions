@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 import {buildError, wrapError} from "./util";
-import * as upload from "./upload-file";
+import * as analysis from "./analysis-input-resource";
 import {getInputs} from "./input-helper";
 
 
@@ -10,7 +10,7 @@ async function run() {
 
     try {
         const inputs = getInputs()
-        upload.uploadFromActions(inputs);
+        analysis.uploadInputFile(inputs);
 
         core.setOutput("status", "success");
     } catch (error) {

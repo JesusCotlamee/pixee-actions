@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 import {buildError, getGithubContext, wrapError} from "./util";
-import * as trigger from "./trigger";
+import * as analysis from "./analysis-input-resource";
 
 async function run() {
     const startedAt = (new Date()).toTimeString();
@@ -11,7 +11,7 @@ async function run() {
         const prNumber = core.getInput('pr-number')
 
         if (number || prNumber) {
-            trigger.triggerFromActions(core.getInput('url'), number ?? prNumber);
+            analysis.triggerPrAnalysis(core.getInput('url'), number ?? prNumber);
             core.setOutput("status", "success");
             return
         }
