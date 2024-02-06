@@ -1,6 +1,7 @@
 # GitHub Actions for Pixee
 
 This repository contains GitHub Actions for interacting with the Pixee.
+Supports two separate actions, file upload and analysis trigger. However, we highly recommend using the analysis input composite. This composite action combines both functionalities into one, streamlining and automating the analysis process within the development workflow.
 
 ## 1. Upload File
 
@@ -15,8 +16,7 @@ this action helps keep the analysis process seamlessly integrated into the devel
 
 ## 3. Composite
 
-The composite action combines these two fundamental functionalities to further simplify and automate the analysis
-process in the development workflow,
+The composite action combines these two fundamental functionalities to further simplify and automate the analysis process in the development workflow,
 providing a comprehensive solution for code analysis with Pixee in GitHub.
 
 ### Usage:
