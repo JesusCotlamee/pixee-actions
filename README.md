@@ -1,32 +1,29 @@
 # GitHub Actions for Pixee
 
-This repository contains GitHub Actions for interacting with the Pixee.
-Supports two separate actions, file upload and analysis trigger. However, we highly recommend using the analysis input composite. This composite action combines both functionalities into one, streamlining and automating the analysis process within the development workflow.
+This repository contains GitHub Actions for interacting with Pixee, providing seamless integration for code analysis in your GitHub workflows.
 
-## 1. Upload File
+## Actions
 
-This action uploads a file to an AWS S3 bucket. Essentially, it facilitates the process of uploading relevant files for
-further processing or reference.
+### 1. Upload File
 
-## 2. Trigger
+This action uploads a file to an AWS S3 bucket, simplifying the process of uploading relevant files for further processing or reference.
 
-This action triggers an analysis of pull requests on GitHub using Pixee. By triggering the analysis automatically in
-response to certain events, such as the opening of a pull request,
-this action helps keep the analysis process seamlessly integrated into the development workflow.
+### 2. Trigger
 
-## 3. Composite
+This action triggers an analysis of pull requests on GitHub using Pixee. By automatically initiating the analysis in response to specific events, such as the opening of a pull request, this action seamlessly integrates the analysis process into your development workflow.
 
-The composite action combines these two fundamental functionalities to further simplify and automate the analysis process in the development workflow,
-providing a comprehensive solution for code analysis with Pixee in GitHub.
+### 3. Composite
 
-### Usage:
+The composite action combines the file upload and analysis trigger functionalities into one, streamlining and automating the analysis process within your development workflow.
 
-Workflows can be called from other repositories using the `uses` clause and passing the necessary inputs and secrets.
+## Usage
 
-### Examples:
+These actions can be incorporated into your workflows using the `uses` clause, passing the necessary inputs and secrets.
 
-See the examples folder for copy/paste usable example workflows.
+## Examples
 
-* [Analysis input](examples/analysis-input.yml)
-* [Upload file](examples/upload-file.yml)
-* [Trigger](examples/trigger.yml)
+For easy integration, check out the examples folder for ready-to-use workflow configurations:
+
+- [Analysis input](examples/analysis-input.yml)
+- [Upload file](examples/upload-file.yml)
+- [Trigger](examples/trigger.yml)
