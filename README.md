@@ -16,10 +16,6 @@ This action triggers an analysis of pull requests on GitHub using Pixee. By auto
 
 The composite action combines the file upload and analysis trigger functionalities into one, streamlining and automating the analysis process within your development workflow.
 
-## Usage
-
-These actions can be incorporated into your workflows using the `uses` clause, passing the necessary inputs and secrets.
-
 ## Examples
 
 For easy integration, check out the examples folder for ready-to-use workflow configurations:

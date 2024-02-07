@@ -34,7 +34,7 @@ jobs:
           # Replace with the specific property that identifies the tool related to the uploaded file. Allowed values: 'sonar', 'codeql', 'semgrep'
           TOOL: 'semgrep'
       - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
+        uses: sonarsource/sonarcloud-github-action@49e6cd3b187936a73b8280d59ffd9da69df63ec9
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Replace <sonar-token> with the token retrieved from SonarCloud. Strongly recommend against hard coding the token directly into the workflow file. Instead, use GitHub Secrets to securely store and access sensitive information.
