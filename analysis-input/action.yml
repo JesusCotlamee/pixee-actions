@@ -26,8 +26,8 @@ runs:
         url: ${{ inputs.URL }}
         file: ${{ inputs.FILE }}
         tool: ${{ inputs.TOOL }}
-#    - name: Call trigger
-#      uses: jesuscotlamee/pixee-actions/trigger@main
-#      with:
-#        url: ${{ inputs.URL }}
-#        pr-number: ${{ inputs.PR_NUMBER }}
+    - name: Call trigger
+      uses: jesuscotlamee/pixee-actions/trigger@main
+      with:
+        url: ${{ inputs.URL }}
+        pr-number: ${{ inputs.PR_NUMBER }}

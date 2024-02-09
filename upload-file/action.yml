@@ -18,4 +18,4 @@ outputs:
     description: Status
 runs:
   using: node20
-  main: ../dist/index.js
+  main: ../dist/upload-file/index.js
