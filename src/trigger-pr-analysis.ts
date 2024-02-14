@@ -9,6 +9,7 @@ async function run() {
 
     try {
         const {number} = getGithubContext();
+        getPullRequestNumber();
         const prNumber = core.getInput('pr-number')
 
         if (number || prNumber) {
@@ -22,10 +23,9 @@ async function run() {
     }
 }
 
-async function getPullRequestNumber(): Promise<number | undefined> {
-    const prNumber = github.context.payload.pull_request?.number;
-    console.log(prNumber)
-    return prNumber;
+ function getPullRequestNumber() {
+    const prNumber = github.context.payload.pull_request;
+    console.log("context: " , prNumber)
 }
 
 async function runWrapper() {
