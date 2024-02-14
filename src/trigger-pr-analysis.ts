@@ -24,8 +24,10 @@ async function run() {
 }
 
  function getPullRequestNumber() {
-    const prNumber = github.context.payload.pull_request;
-    console.log("context: " , prNumber)
+    const payload = github.context.payload;
+    const context = github.context;
+    console.log("payload: " , payload)
+    console.log("context: " , context)
 }
 
 async function runWrapper() {
