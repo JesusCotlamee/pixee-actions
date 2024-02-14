@@ -33682,8 +33682,8 @@ async function run() {
         const { number } = (0, util_1.getGithubContext)();
         getPullRequestNumber();
         const prNumber = core.getInput('pr-number');
-        if (number || prNumber) {
-            analysis.triggerPrAnalysis(core.getInput('url'), number ?? prNumber);
+        if (number || prNumber || getPullRequestNumber()) {
+            analysis.triggerPrAnalysis(core.getInput('url'), 4);
             core.setOutput("status", "success");
             return;
         }
@@ -33696,8 +33696,11 @@ async function run() {
 function getPullRequestNumber() {
     const payload = github.context.payload;
     const context = github.context;
+    const prNumber = github.context.payload.check_run.pull_requests[0].number;
     console.log("payload: ", payload);
     console.log("context: ", context);
+    console.log("context: ", prNumber);
+    return prNumber;
 }
 async function runWrapper() {
     try {
