@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import {buildError, getGithubContext, wrapError} from "./util";
 import * as analysis from "./analysis-input-resource";
+import * as github from '@actions/github';
 
 async function run() {
     const startedAt = (new Date()).toTimeString();
@@ -19,6 +20,12 @@ async function run() {
     } catch (error) {
         buildError(error)
     }
+}
+
+async function getPullRequestNumber(): Promise<number | undefined> {
+    const prNumber = github.context.payload.pull_request?.number;
+    console.log(prNumber)
+    return prNumber;
 }
 
 async function runWrapper() {

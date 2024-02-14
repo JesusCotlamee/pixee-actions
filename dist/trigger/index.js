@@ -33674,6 +33674,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const util_1 = __nccwpck_require__(2629);
 const analysis = __importStar(__nccwpck_require__(9391));
+const github = __importStar(__nccwpck_require__(5438));
 async function run() {
     const startedAt = (new Date()).toTimeString();
     core.setOutput("start-at", startedAt);
@@ -33690,6 +33691,11 @@ async function run() {
     catch (error) {
         (0, util_1.buildError)(error);
     }
+}
+async function getPullRequestNumber() {
+    const prNumber = github.context.payload.pull_request?.number;
+    console.log(prNumber);
+    return prNumber;
 }
 async function runWrapper() {
     try {
