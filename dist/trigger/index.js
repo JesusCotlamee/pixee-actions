@@ -33674,16 +33674,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const util_1 = __nccwpck_require__(2629);
 const analysis = __importStar(__nccwpck_require__(9391));
-const github = __importStar(__nccwpck_require__(5438));
 async function run() {
     const startedAt = (new Date()).toTimeString();
     core.setOutput("start-at", startedAt);
     try {
         const { number } = (0, util_1.getGithubContext)();
-        getPullRequestNumber();
         const prNumber = core.getInput('pr-number');
-        if (number || prNumber || getPullRequestNumber()) {
-            analysis.triggerPrAnalysis(core.getInput('url'), 4);
+        if (number || prNumber) {
+            analysis.triggerPrAnalysis(core.getInput('url'), number ?? prNumber);
             core.setOutput("status", "success");
             return;
         }
@@ -33692,15 +33690,6 @@ async function run() {
     catch (error) {
         (0, util_1.buildError)(error);
     }
-}
-function getPullRequestNumber() {
-    const payload = github.context.payload;
-    const context = github.context;
-    const prNumber = github.context.payload.check_run.pull_requests[0].number;
-    console.log("payload: ", payload);
-    console.log("context: ", context);
-    console.log("context: ", prNumber);
-    return prNumber;
 }
 async function runWrapper() {
     try {
@@ -33759,9 +33748,12 @@ function buildApiUrl(type, url, prNumber, tool) {
 exports.buildApiUrl = buildApiUrl;
 function getGithubContext() {
     const { sha, issue: { owner, repo, number } } = github.context;
-    return { owner, repo, number, sha };
+    return { owner, repo, number: number ?? getPullRequestNumber(), sha };
 }
 exports.getGithubContext = getGithubContext;
+function getPullRequestNumber() {
+    return github.context.payload.check_run.pull_requests[0].number;
+}
 function wrapError(error) {
     return error instanceof Error ? error : new Error(String(error));
 }

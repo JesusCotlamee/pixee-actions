@@ -17,7 +17,12 @@ export function buildApiUrl(type: EndpointType, url: string, prNumber: number | 
 
 export function getGithubContext() {
     const {sha, issue: {owner, repo, number}} = github.context
-    return {owner, repo, number, sha}
+
+    return {owner, repo, number: number ?? getPullRequestNumber(), sha}
+}
+
+function getPullRequestNumber() {
+    return github.context.payload.check_run.pull_requests[0].number
 }
 
 export function wrapError(error: unknown): Error {
