@@ -33747,10 +33747,14 @@ function buildApiUrl(type, url, prNumber, tool) {
 }
 exports.buildApiUrl = buildApiUrl;
 function getGithubContext() {
+    console.log('github.context: ', github.context);
     const { sha, issue: { owner, repo, number } } = github.context;
-    console.log('getPullRequestHeadSha: ', getPullRequestHeadSha());
     console.log('sha: ', sha);
-    return { owner, repo, number: number ?? getPullRequestNumber(), sha };
+    if (github.context.eventName === 'check_run') {
+        console.log('getPullRequestHeadSha: ', getPullRequestHeadSha());
+        return { owner, repo, number: getPullRequestNumber(), sha: getPullRequestHeadSha() };
+    }
+    return { owner, repo, number: number, sha };
 }
 exports.getGithubContext = getGithubContext;
 function getPullRequestHeadSha() {
