@@ -1,5 +1,6 @@
 import * as core from "@actions/core";
 import * as github from '@actions/github';
+import {Context} from "@actions/github/lib/context";
 
 type EndpointType = 'upload' | 'trigger'
 type GithubEvent = 'check_run' | 'pull_request';
@@ -33,23 +34,23 @@ export function isGithubEventValid(): boolean {
 export function getGithubContext(): GitHubContext {
     const { issue: {owner, repo}, eventName } = github.context;
 
-    const eventHandlers: { [eventName: string]: () => Pick<GitHubContext, "number" | "sha"> } = {
+    const eventHandlers: { [eventName: string]: (context: Context) => Pick<GitHubContext, "number" | "sha"> } = {
         'check_run': getCheckRunContext,
         'pull_request': getPullRequestContext
     };
 
     const handler = eventHandlers[eventName];
-    return { owner, repo, ...handler() };
+    return { owner, repo, ...handler(github.context) };
 }
 
-function getPullRequestContext(): Pick<GitHubContext, 'number' | 'sha'> {
-    const number = github.context.issue.number;
-    const sha = github.context.payload.pull_request?.head.sha;
+function getPullRequestContext(context: Context): Pick<GitHubContext, 'number' | 'sha'> {
+    const number = context.issue.number;
+    const sha = context.payload.pull_request?.head.sha;
     return { number, sha };
 }
 
-function getCheckRunContext(): Pick<GitHubContext, 'number' | 'sha'> {
-    const actionEvent = github.context.payload.check_run
+function getCheckRunContext(context: Context): Pick<GitHubContext, 'number' | 'sha'> {
+    const actionEvent = context.payload.check_run
 
     const number = actionEvent.pull_requests[0].number;
     const sha = actionEvent.head_sha;

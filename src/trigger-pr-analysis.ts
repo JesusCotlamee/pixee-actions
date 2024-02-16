@@ -18,7 +18,6 @@ async function run() {
             }
             core.setFailed('PR number not found. Please provide a valid PR number.');
         }
-
         core.setFailed('Invalid GitHub event');
     } catch (error) {
         buildError(error)

@@ -33762,18 +33762,18 @@ function getGithubContext() {
         'pull_request': getPullRequestContext
     };
     const handler = eventHandlers[eventName];
-    return { owner, repo, ...handler() };
+    return { owner, repo, ...handler(github.context) };
 }
 exports.getGithubContext = getGithubContext;
-function getPullRequestContext() {
-    const number = github.context.issue.number;
-    const sha = github.context.payload.pull_request?.head.sha;
+function getPullRequestContext(context) {
+    const number = context.issue.number;
+    const sha = context.payload.pull_request?.head.sha;
     return { number, sha };
 }
-function getCheckRunContext() {
-    const actionEvent = github.context.payload.check_run;
-    const sha = actionEvent.head_sha;
+function getCheckRunContext(context) {
+    const actionEvent = context.payload.check_run;
     const number = actionEvent.pull_requests[0].number;
+    const sha = actionEvent.head_sha;
     return { number, sha };
 }
 function wrapError(error) {
