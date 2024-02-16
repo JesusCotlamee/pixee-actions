@@ -18,7 +18,14 @@ export function buildApiUrl(type: EndpointType, url: string, prNumber: number | 
 export function getGithubContext() {
     const {sha, issue: {owner, repo, number}} = github.context
 
-    return {owner, repo, number: number ?? getPullRequestNumber(), sha}
+    console.log('getPullRequestHeadSha: ', getPullRequestHeadSha())
+    console.log('sha: ', sha)
+
+    return {owner, repo, number: number ?? getPullRequestNumber(), sha: getPullRequestHeadSha()}
+}
+
+function getPullRequestHeadSha(){
+   return  github.context.payload.check_run.head_sha;
 }
 
 function getPullRequestNumber() {
