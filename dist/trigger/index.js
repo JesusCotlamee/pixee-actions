@@ -33749,13 +33749,13 @@ exports.buildApiUrl = buildApiUrl;
 function getGithubContext() {
     const { sha, issue: { owner, repo, number } } = github.context;
     console.log('sha: ', sha);
-    console.log('github.context:', github.context);
     console.log('github.context.payload.pull_request?.head:', github.context.payload.pull_request?.head);
     if (github.context.eventName === 'check_run') {
         console.log('getPullRequestHeadSha: ', getCheckRunHeadSha());
         return { owner, repo, number: getCheckRunPRNumber(), sha: getCheckRunHeadSha() };
     }
     else if (github.context.eventName === 'pull_request') {
+        console.log('getPullRequestHeadSha(): ', getPullRequestHeadSha());
         return { owner, repo, number: getCheckRunPRNumber(), sha: getPullRequestHeadSha() };
     }
     return { owner, repo, number: number, sha };
