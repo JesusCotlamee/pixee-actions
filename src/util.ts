@@ -21,7 +21,7 @@ export function getGithubContext() {
     console.log('getPullRequestHeadSha: ', getPullRequestHeadSha())
     console.log('sha: ', sha)
 
-    return {owner, repo, number: number ?? getPullRequestNumber(), sha: getPullRequestHeadSha()}
+    return {owner, repo, number: number ?? getPullRequestNumber(), sha}
 }
 
 function getPullRequestHeadSha(){

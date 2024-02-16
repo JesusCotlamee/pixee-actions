@@ -33750,7 +33750,7 @@ function getGithubContext() {
     const { sha, issue: { owner, repo, number } } = github.context;
     console.log('getPullRequestHeadSha: ', getPullRequestHeadSha());
     console.log('sha: ', sha);
-    return { owner, repo, number: number ?? getPullRequestNumber(), sha: getPullRequestHeadSha() };
+    return { owner, repo, number: number ?? getPullRequestNumber(), sha };
 }
 exports.getGithubContext = getGithubContext;
 function getPullRequestHeadSha() {
