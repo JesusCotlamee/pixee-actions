@@ -16,13 +16,9 @@ export function buildApiUrl(type: EndpointType, url: string, prNumber: number | 
 }
 
 export function getGithubContext() {
-
-    console.log('github.context: ', github.context)
     const {sha, issue: {owner, repo, number}} = github.context
-    console.log('sha: ', sha)
 
     if (github.context.eventName === 'check_run'){
-        console.log('getPullRequestHeadSha: ', getPullRequestHeadSha())
         return {owner, repo, number: getPullRequestNumber(), sha: getPullRequestHeadSha()}
     }
 
