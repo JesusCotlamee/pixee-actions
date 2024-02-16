@@ -33748,7 +33748,9 @@ function buildApiUrl(type, url, prNumber, tool) {
 exports.buildApiUrl = buildApiUrl;
 function getGithubContext() {
     const { sha, issue: { owner, repo, number } } = github.context;
+    console.log('sha: ', sha);
     if (github.context.eventName === 'check_run') {
+        console.log('getPullRequestHeadSha: ', getPullRequestHeadSha());
         return { owner, repo, number: getPullRequestNumber(), sha: getPullRequestHeadSha() };
     }
     return { owner, repo, number: number, sha };
