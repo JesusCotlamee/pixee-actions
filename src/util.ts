@@ -2,7 +2,17 @@ import * as core from "@actions/core";
 import * as github from '@actions/github';
 
 type EndpointType = 'upload' | 'trigger'
+type GithubEvent = 'check_run' | 'pull_request';
+
+const validEvents: GithubEvent[] = ['check_run', 'pull_request'];
 const PIXEE_SAMBOX_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod'
+
+interface GitHubContext {
+    owner: string;
+    repo: string;
+    number: number;
+    sha: string;
+}
 
 export function buildApiUrl(type: EndpointType, url: string, prNumber: number | null, tool?: string) {
     const customUrl = url ? url : PIXEE_SAMBOX_URL
@@ -15,32 +25,35 @@ export function buildApiUrl(type: EndpointType, url: string, prNumber: number | 
     return `${customUrl}/analysis-input/${owner}/${repo}/${prNumber ?? number}`
 }
 
-export function getGithubContext() {
-    const {sha, issue: {owner, repo, number}} = github.context
-    console.log('sha: ', sha)
-    console.log('github.context.payload.pull_request?.head:',github.context.payload.pull_request?.head )
-
-    if (github.context.eventName === 'check_run'){
-        console.log('getPullRequestHeadSha: ', getCheckRunHeadSha())
-        return {owner, repo, number: getCheckRunPRNumber(), sha: getCheckRunHeadSha()}
-    }else if (github.context.eventName === 'pull_request'){
-        console.log('getPullRequestHeadSha(): ', getPullRequestHeadSha())
-        return {owner, repo, number, sha: getPullRequestHeadSha()}
-    }
-
-    return {owner, repo, number: number, sha}
+export function isGithubEventValid(): boolean {
+    const eventName = github.context.eventName as GithubEvent
+    return validEvents.includes(eventName);
 }
 
-function getPullRequestHeadSha(){
-    return  github.context.payload.pull_request?.head.sha;
+export function getGithubContext(): GitHubContext {
+    const { issue: {owner, repo}, eventName } = github.context;
+
+    const eventHandlers: { [eventName: string]: () => Pick<GitHubContext, "number" | "sha"> } = {
+        'check_run': getCheckRunContext,
+        'pull_request': getPullRequestContext
+    };
+
+    const handler = eventHandlers[eventName];
+    return { owner, repo, ...handler() };
 }
 
-function getCheckRunHeadSha(){
-   return  github.context.payload.check_run.head_sha;
+function getPullRequestContext(): Pick<GitHubContext, 'number' | 'sha'> {
+    const number = github.context.issue.number;
+    const sha = github.context.payload.pull_request?.head.sha;
+    return { number, sha };
 }
 
-function getCheckRunPRNumber() {
-    return github.context.payload.check_run.pull_requests[0].number
+function getCheckRunContext(): Pick<GitHubContext, 'number' | 'sha'> {
+    const actionEvent = github.context.payload.check_run
+
+    const number = actionEvent.pull_requests[0].number;
+    const sha = actionEvent.head_sha;
+    return { number, sha };
 }
 
 export function wrapError(error: unknown): Error {

@@ -33789,9 +33789,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserError = exports.buildError = exports.wrapError = exports.getGithubContext = exports.buildApiUrl = void 0;
+exports.UserError = exports.buildError = exports.wrapError = exports.getGithubContext = exports.isGithubEventValid = exports.buildApiUrl = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
+const validEvents = ['check_run', 'pull_request'];
 const PIXEE_SAMBOX_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod';
 function buildApiUrl(type, url, prNumber, tool) {
     const customUrl = url ? url : PIXEE_SAMBOX_URL;
@@ -33802,29 +33803,31 @@ function buildApiUrl(type, url, prNumber, tool) {
     return `${customUrl}/analysis-input/${owner}/${repo}/${prNumber ?? number}`;
 }
 exports.buildApiUrl = buildApiUrl;
+function isGithubEventValid() {
+    const eventName = github.context.eventName;
+    return validEvents.includes(eventName);
+}
+exports.isGithubEventValid = isGithubEventValid;
 function getGithubContext() {
-    const { sha, issue: { owner, repo, number } } = github.context;
-    console.log('sha: ', sha);
-    console.log('github.context.payload.pull_request?.head:', github.context.payload.pull_request?.head);
-    if (github.context.eventName === 'check_run') {
-        console.log('getPullRequestHeadSha: ', getCheckRunHeadSha());
-        return { owner, repo, number: getCheckRunPRNumber(), sha: getCheckRunHeadSha() };
-    }
-    else if (github.context.eventName === 'pull_request') {
-        console.log('getPullRequestHeadSha(): ', getPullRequestHeadSha());
-        return { owner, repo, number, sha: getPullRequestHeadSha() };
-    }
-    return { owner, repo, number: number, sha };
+    const { issue: { owner, repo }, eventName } = github.context;
+    const eventHandlers = {
+        'check_run': getCheckRunContext,
+        'pull_request': getPullRequestContext
+    };
+    const handler = eventHandlers[eventName];
+    return { owner, repo, ...handler() };
 }
 exports.getGithubContext = getGithubContext;
-function getPullRequestHeadSha() {
-    return github.context.payload.pull_request?.head.sha;
+function getPullRequestContext() {
+    const number = github.context.issue.number;
+    const sha = github.context.payload.pull_request?.head.sha;
+    return { number, sha };
 }
-function getCheckRunHeadSha() {
-    return github.context.payload.check_run.head_sha;
-}
-function getCheckRunPRNumber() {
-    return github.context.payload.check_run.pull_requests[0].number;
+function getCheckRunContext() {
+    const actionEvent = github.context.payload.check_run;
+    const sha = actionEvent.head_sha;
+    const number = actionEvent.pull_requests[0].number;
+    return { number, sha };
 }
 function wrapError(error) {
     return error instanceof Error ? error : new Error(String(error));
