@@ -1,17 +1,32 @@
 import * as core from "@actions/core";
 import * as github from '@actions/github';
 import {Context} from "node:vm";
+import {SonarcloudInputs} from "./sonarcloud-inputs";
 
 type GithubEvent = 'check_run' | 'pull_request';
 
 const validEvents: GithubEvent[] = ['check_run', 'pull_request'];
 const PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod/analysis-input'
 
+const eventHandlers: { [eventName: string]: (context: Context) => Pick<GitHubContext, "prNumber" | "sha"> } = {
+    'check_run': getCheckRunContext,
+    'pull_request': getPullRequestContext
+};
+
 interface GitHubContext {
     owner: string;
     repo: string;
     prNumber: number;
     sha: string;
+}
+
+export function buildSonarcloudUrl(inputs: SonarcloudInputs): string {
+    const {componentKey, urlApi} = inputs
+    const context = github.context
+    const handler = eventHandlers[context.eventName];
+
+    const { prNumber } = handler(context)
+    return `${urlApi}/issues/search?componentKeys=${componentKey}&resolved=false&pullRequest=${prNumber}`
 }
 
 export function buildTriggerApiUrl(prNumber: number): string {
@@ -33,15 +48,7 @@ export function isGithubEventValid(): boolean {
 
 export function getGithubContext(): GitHubContext {
     const { issue: {owner, repo}, eventName } = github.context;
-    console.log('eventName: ', eventName)
-
-    const eventHandlers: { [eventName: string]: (context: Context) => Pick<GitHubContext, "prNumber" | "sha"> } = {
-        'check_run': getCheckRunContext,
-        'pull_request': getPullRequestContext
-    };
-
     const handler = eventHandlers[eventName];
-    console.log('handler: ', handler(github.context))
 
     return { owner, repo, ...handler(github.context) };
 }
@@ -67,7 +74,6 @@ export function wrapError(error: unknown): Error {
 export function buildError(unwrappedError: unknown) {
     const error = wrapError(unwrappedError);
     const message = error.message;
-    console.log('failed: ', message)
     core.setOutput("status", "error");
     core.setFailed(message);
     return;

@@ -1,20 +1,35 @@
 import * as core from "@actions/core";
-import {buildError, buildTriggerApiUrl, buildUploadApiUrl} from "./util";
+import {buildError, buildSonarcloudUrl, buildTriggerApiUrl, buildUploadApiUrl} from "./util";
 import axios from "axios";
-import {UploadInputs} from "./upload-inputs";
 import fs from "fs";
 import FormData from "form-data";
+import {Tool} from "./input-helper";
+import {SonarcloudInputs} from "./sonarcloud-inputs";
 
 const UTF = 'utf-8'
 const AUDIENCE = 'https://app.pixee.ai'
+const FILE_NAME = 'sonar_issues.json';
 
-export function uploadInputFile(inputs: UploadInputs) {
-    const { file, tool} = inputs
+export function downloadSonarcloudFile(inputs: SonarcloudInputs) {
+    axios.get(buildSonarcloudUrl(inputs), {
+       /* headers: {
+            contentType: 'application/json',
+            Authorization: `Bearer ${inputs.token}`
+        },*/
+        responseType: 'json'
+    })
+        .then(response => {
+            fs.writeFileSync(FILE_NAME, JSON.stringify(response.data));
+            uploadInputFile('sonar', FILE_NAME)
+        })
+        .catch(error => buildError(error));
+}
+
+export function uploadInputFile(tool: Tool, file: string) {
     const fileContent = fs.readFileSync(file, UTF);
     const form = new FormData();
     form.append('file', fileContent);
 
-    console.log('inputs: uploadInputFile', inputs)
     const tokenPromise = core.getIDToken(AUDIENCE)
 
     tokenPromise.then(token => {
@@ -26,7 +41,6 @@ export function uploadInputFile(inputs: UploadInputs) {
                     },
                 })
                     .then(response => {
-                        console.log('response uploadInputFile: ', response)
                         if (response.status != 204) {
                             core.setFailed(`Failed response status: ${response.status}`);
                             return

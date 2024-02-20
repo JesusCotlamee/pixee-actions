@@ -33581,7 +33581,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.triggerPrAnalysis = exports.uploadInputFile = void 0;
+exports.triggerPrAnalysis = exports.uploadInputFile = exports.downloadSonarcloudFile = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const util_1 = __nccwpck_require__(2629);
 const axios_1 = __importDefault(__nccwpck_require__(6545));
@@ -33589,12 +33589,26 @@ const fs_1 = __importDefault(__nccwpck_require__(7147));
 const form_data_1 = __importDefault(__nccwpck_require__(4334));
 const UTF = 'utf-8';
 const AUDIENCE = 'https://app.pixee.ai';
-function uploadInputFile(inputs) {
-    const { file, tool } = inputs;
+const FILE_NAME = 'sonar_issues.json';
+function downloadSonarcloudFile(inputs) {
+    axios_1.default.get((0, util_1.buildSonarcloudUrl)(inputs), {
+        /* headers: {
+             contentType: 'application/json',
+             Authorization: `Bearer ${inputs.token}`
+         },*/
+        responseType: 'json'
+    })
+        .then(response => {
+        fs_1.default.writeFileSync(FILE_NAME, JSON.stringify(response.data));
+        uploadInputFile('sonar', FILE_NAME);
+    })
+        .catch(error => (0, util_1.buildError)(error));
+}
+exports.downloadSonarcloudFile = downloadSonarcloudFile;
+function uploadInputFile(tool, file) {
     const fileContent = fs_1.default.readFileSync(file, UTF);
     const form = new form_data_1.default();
     form.append('file', fileContent);
-    console.log('inputs: uploadInputFile', inputs);
     const tokenPromise = core.getIDToken(AUDIENCE);
     tokenPromise.then(token => {
         try {
@@ -33605,7 +33619,6 @@ function uploadInputFile(inputs) {
                 },
             })
                 .then(response => {
-                console.log('response uploadInputFile: ', response);
                 if (response.status != 204) {
                     core.setFailed(`Failed response status: ${response.status}`);
                     return;
@@ -33678,20 +33691,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getInputs = void 0;
+exports.getRequiredInput = exports.getSonarcloudInputs = exports.getTool = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const util_1 = __nccwpck_require__(2629);
 const VALID_TOOLS = ['sonar', 'codeql', 'semgrep'];
 /**
  * Helper to get all the inputs for the action
  */
-function getInputs() {
-    const file = getRequiredInput('file');
+function getTool() {
     const tool = getRequiredInput('tool');
     validateTool(tool);
-    return { file, tool };
+    return tool;
 }
-exports.getInputs = getInputs;
+exports.getTool = getTool;
+function getSonarcloudInputs() {
+    const token = getRequiredInput('sonar-token');
+    const componentKey = getRequiredInput('sonar-component-key');
+    const urlApi = getRequiredInput('sonar-api');
+    return { token, componentKey, urlApi };
+}
+exports.getSonarcloudInputs = getSonarcloudInputs;
 function getRequiredInput(name) {
     const value = core.getInput(name);
     if (!value) {
@@ -33699,6 +33718,7 @@ function getRequiredInput(name) {
     }
     return value;
 }
+exports.getRequiredInput = getRequiredInput;
 function validateTool(tool) {
     if (!VALID_TOOLS.includes(tool)) {
         throw new util_1.UserError(`Invalid tool "${tool}". The tool must be one of: ${VALID_TOOLS.join(', ')}.`);
@@ -33745,8 +33765,14 @@ async function run() {
     const startedAt = (new Date()).toTimeString();
     core.setOutput("start-at", startedAt);
     try {
-        const inputs = (0, input_helper_1.getInputs)();
-        analysis.uploadInputFile(inputs);
+        const tool = (0, input_helper_1.getTool)();
+        if (tool === 'sonar') {
+            const inputs = (0, input_helper_1.getSonarcloudInputs)();
+            analysis.downloadSonarcloudFile(inputs);
+            return;
+        }
+        const file = (0, input_helper_1.getRequiredInput)('file');
+        analysis.uploadInputFile(tool, file);
         core.setOutput("status", "success");
     }
     catch (error) {
@@ -33790,11 +33816,23 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserError = exports.buildError = exports.wrapError = exports.getGithubContext = exports.isGithubEventValid = exports.buildUploadApiUrl = exports.buildTriggerApiUrl = void 0;
+exports.UserError = exports.buildError = exports.wrapError = exports.getGithubContext = exports.isGithubEventValid = exports.buildUploadApiUrl = exports.buildTriggerApiUrl = exports.buildSonarcloudUrl = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const validEvents = ['check_run', 'pull_request'];
 const PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod/analysis-input';
+const eventHandlers = {
+    'check_run': getCheckRunContext,
+    'pull_request': getPullRequestContext
+};
+function buildSonarcloudUrl(inputs) {
+    const { componentKey, urlApi } = inputs;
+    const context = github.context;
+    const handler = eventHandlers[context.eventName];
+    const { prNumber } = handler(context);
+    return `${urlApi}/issues/search?componentKeys=${componentKey}&resolved=false&pullRequest=${prNumber}`;
+}
+exports.buildSonarcloudUrl = buildSonarcloudUrl;
 function buildTriggerApiUrl(prNumber) {
     const { owner, repo, sha } = getGithubContext();
     return `${PIXEE_URL}/${owner}/${repo}/${prNumber}`;
@@ -33812,13 +33850,7 @@ function isGithubEventValid() {
 exports.isGithubEventValid = isGithubEventValid;
 function getGithubContext() {
     const { issue: { owner, repo }, eventName } = github.context;
-    console.log('eventName: ', eventName);
-    const eventHandlers = {
-        'check_run': getCheckRunContext,
-        'pull_request': getPullRequestContext
-    };
     const handler = eventHandlers[eventName];
-    console.log('handler: ', handler(github.context));
     return { owner, repo, ...handler(github.context) };
 }
 exports.getGithubContext = getGithubContext;
@@ -33840,7 +33872,6 @@ exports.wrapError = wrapError;
 function buildError(unwrappedError) {
     const error = wrapError(unwrappedError);
     const message = error.message;
-    console.log('failed: ', message);
     core.setOutput("status", "error");
     core.setFailed(message);
     return;
