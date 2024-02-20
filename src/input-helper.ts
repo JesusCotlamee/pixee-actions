@@ -16,11 +16,11 @@ export function getTool(): Tool {
 }
 
 export function getSonarcloudInputs(): SonarcloudInputs {
-    // const token = getRequiredInput('sonar-token');
+    const token = core.getInput('sonar-token');
     const componentKey = getRequiredInput('sonar-component-key');
     const urlApi = getRequiredInput('sonar-api');
 
-    return { token: '', componentKey, urlApi}
+    return { token, componentKey, urlApi}
 }
 
 export function getRequiredInput(name: string): string {

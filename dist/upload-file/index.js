@@ -33592,10 +33592,10 @@ const AUDIENCE = 'https://app.pixee.ai';
 const FILE_NAME = 'sonar_issues.json';
 function downloadSonarcloudFile(inputs) {
     axios_1.default.get((0, util_1.buildSonarcloudUrl)(inputs), {
-        /* headers: {
-             contentType: 'application/json',
-             Authorization: `Bearer ${inputs.token}`
-         },*/
+        headers: {
+            contentType: 'application/json',
+            Authorization: `Bearer ${inputs.token}`
+        },
         responseType: 'json'
     })
         .then(response => {
@@ -33644,7 +33644,6 @@ function triggerPrAnalysis(prNumber) {
                 }
             })
                 .then(response => {
-                console.log('response triggerPrAnalysis: ', response);
                 if (response.status != 204) {
                     core.setFailed(`Failed response status: ${response.status}`);
                     return;
@@ -33705,10 +33704,10 @@ function getTool() {
 }
 exports.getTool = getTool;
 function getSonarcloudInputs() {
-    // const token = getRequiredInput('sonar-token');
+    const token = core.getInput('sonar-token');
     const componentKey = getRequiredInput('sonar-component-key');
     const urlApi = getRequiredInput('sonar-api');
-    return { token: '', componentKey, urlApi };
+    return { token, componentKey, urlApi };
 }
 exports.getSonarcloudInputs = getSonarcloudInputs;
 function getRequiredInput(name) {

@@ -12,10 +12,10 @@ const FILE_NAME = 'sonar_issues.json';
 
 export function downloadSonarcloudFile(inputs: SonarcloudInputs) {
     axios.get(buildSonarcloudUrl(inputs), {
-       /* headers: {
+        headers: {
             contentType: 'application/json',
             Authorization: `Bearer ${inputs.token}`
-        },*/
+        },
         responseType: 'json'
     })
         .then(response => {
@@ -67,7 +67,6 @@ export function triggerPrAnalysis(prNumber: number) {
                 }
             })
                 .then(response => {
-                    console.log('response triggerPrAnalysis: ', response)
                     if (response.status != 204) {
                         core.setFailed(`Failed response status: ${response.status}`);
                         return
