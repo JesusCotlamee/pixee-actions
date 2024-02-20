@@ -33705,10 +33705,10 @@ function getTool() {
 }
 exports.getTool = getTool;
 function getSonarcloudInputs() {
-    const token = getRequiredInput('sonar-token');
+    // const token = getRequiredInput('sonar-token');
     const componentKey = getRequiredInput('sonar-component-key');
     const urlApi = getRequiredInput('sonar-api');
-    return { token, componentKey, urlApi };
+    return { token: '', componentKey, urlApi };
 }
 exports.getSonarcloudInputs = getSonarcloudInputs;
 function getRequiredInput(name) {
