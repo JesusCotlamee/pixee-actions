@@ -33549,7 +33549,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 9391:
+/***/ 3091:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -33587,9 +33587,6 @@ const util_1 = __nccwpck_require__(2629);
 const axios_1 = __importDefault(__nccwpck_require__(6545));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 const form_data_1 = __importDefault(__nccwpck_require__(4334));
-const UTF = 'utf-8';
-const AUDIENCE = 'https://app.pixee.ai';
-const FILE_NAME = 'sonar_issues.json';
 function downloadSonarcloudFile(inputs) {
     axios_1.default.get((0, util_1.buildSonarcloudUrl)(inputs), {
         headers: {
@@ -33633,7 +33630,6 @@ function uploadInputFile(tool, file) {
 }
 exports.uploadInputFile = uploadInputFile;
 function triggerPrAnalysis(prNumber) {
-    console.log('Test triggerPrAnalysis: ', prNumber);
     const tokenPromise = core.getIDToken(AUDIENCE);
     tokenPromise.then(token => {
         try {
@@ -33692,7 +33688,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const util_1 = __nccwpck_require__(2629);
-const analysis = __importStar(__nccwpck_require__(9391));
+const analysis = __importStar(__nccwpck_require__(3091));
 async function run() {
     const startedAt = (new Date()).toTimeString();
     core.setOutput("start-at", startedAt);
@@ -33752,8 +33748,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserError = exports.buildError = exports.wrapError = exports.getGithubContext = exports.isGithubEventValid = exports.buildUploadApiUrl = exports.buildTriggerApiUrl = exports.buildSonarcloudUrl = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const validEvents = ['check_run', 'pull_request'];
-const PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod/analysis-input';
 const eventHandlers = {
     'check_run': getCheckRunContext,
     'pull_request': getPullRequestContext
@@ -33778,7 +33772,7 @@ function buildUploadApiUrl(tool) {
 exports.buildUploadApiUrl = buildUploadApiUrl;
 function isGithubEventValid() {
     const eventName = github.context.eventName;
-    return validEvents.includes(eventName);
+    return VALID_EVENTS.includes(eventName);
 }
 exports.isGithubEventValid = isGithubEventValid;
 function getGithubContext() {

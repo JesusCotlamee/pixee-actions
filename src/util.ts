@@ -1,24 +1,11 @@
 import * as core from "@actions/core";
 import * as github from '@actions/github';
 import {Context} from "node:vm";
-import {SonarcloudInputs} from "./sonarcloud-inputs";
-
-type GithubEvent = 'check_run' | 'pull_request';
-
-const validEvents: GithubEvent[] = ['check_run', 'pull_request'];
-const PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod/analysis-input'
 
 const eventHandlers: { [eventName: string]: (context: Context) => Pick<GitHubContext, "prNumber" | "sha"> } = {
     'check_run': getCheckRunContext,
     'pull_request': getPullRequestContext
 };
-
-interface GitHubContext {
-    owner: string;
-    repo: string;
-    prNumber: number;
-    sha: string;
-}
 
 export function buildSonarcloudUrl(inputs: SonarcloudInputs): string {
     const {componentKey, urlApi} = inputs
@@ -43,7 +30,7 @@ export function buildUploadApiUrl(tool: string): string {
 
 export function isGithubEventValid(): boolean {
     const eventName = github.context.eventName as GithubEvent
-    return validEvents.includes(eventName);
+    return VALID_EVENTS.includes(eventName);
 }
 
 export function getGithubContext(): GitHubContext {

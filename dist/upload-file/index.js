@@ -33549,7 +33549,72 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 9391:
+/***/ 5322:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getRequiredInput = exports.getSonarcloudInputs = exports.getTool = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const util_1 = __nccwpck_require__(2629);
+/**
+ * Helper to get all the inputs for the action
+ */
+function getTool() {
+    const tool = getRequiredInput('tool');
+    validateTool(tool);
+    return tool;
+}
+exports.getTool = getTool;
+function getSonarcloudInputs() {
+    const token = core.getInput('sonar-token');
+    const componentKey = getRequiredInput('sonar-component-key');
+    const urlApi = getRequiredInput('sonar-api');
+    return { token, componentKey, urlApi };
+}
+exports.getSonarcloudInputs = getSonarcloudInputs;
+function getRequiredInput(name) {
+    const value = core.getInput(name);
+    if (!value) {
+        throw new util_1.UserError(`Input required and not supplied: ${name}`);
+    }
+    return value;
+}
+exports.getRequiredInput = getRequiredInput;
+function validateTool(tool) {
+    if (!VALID_TOOLS.includes(tool)) {
+        throw new util_1.UserError(`Invalid tool "${tool}". The tool must be one of: ${VALID_TOOLS.join(', ')}.`);
+    }
+}
+
+
+/***/ }),
+
+/***/ 3091:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -33587,9 +33652,6 @@ const util_1 = __nccwpck_require__(2629);
 const axios_1 = __importDefault(__nccwpck_require__(6545));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 const form_data_1 = __importDefault(__nccwpck_require__(4334));
-const UTF = 'utf-8';
-const AUDIENCE = 'https://app.pixee.ai';
-const FILE_NAME = 'sonar_issues.json';
 function downloadSonarcloudFile(inputs) {
     axios_1.default.get((0, util_1.buildSonarcloudUrl)(inputs), {
         headers: {
@@ -33633,7 +33695,6 @@ function uploadInputFile(tool, file) {
 }
 exports.uploadInputFile = uploadInputFile;
 function triggerPrAnalysis(prNumber) {
-    console.log('Test triggerPrAnalysis: ', prNumber);
     const tokenPromise = core.getIDToken(AUDIENCE);
     tokenPromise.then(token => {
         try {
@@ -33657,72 +33718,6 @@ function triggerPrAnalysis(prNumber) {
     });
 }
 exports.triggerPrAnalysis = triggerPrAnalysis;
-
-
-/***/ }),
-
-/***/ 5322:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getRequiredInput = exports.getSonarcloudInputs = exports.getTool = void 0;
-const core = __importStar(__nccwpck_require__(2186));
-const util_1 = __nccwpck_require__(2629);
-const VALID_TOOLS = ['sonar', 'codeql', 'semgrep'];
-/**
- * Helper to get all the inputs for the action
- */
-function getTool() {
-    const tool = getRequiredInput('tool');
-    validateTool(tool);
-    return tool;
-}
-exports.getTool = getTool;
-function getSonarcloudInputs() {
-    const token = core.getInput('sonar-token');
-    const componentKey = getRequiredInput('sonar-component-key');
-    const urlApi = getRequiredInput('sonar-api');
-    return { token, componentKey, urlApi };
-}
-exports.getSonarcloudInputs = getSonarcloudInputs;
-function getRequiredInput(name) {
-    const value = core.getInput(name);
-    if (!value) {
-        throw new util_1.UserError(`Input required and not supplied: ${name}`);
-    }
-    return value;
-}
-exports.getRequiredInput = getRequiredInput;
-function validateTool(tool) {
-    if (!VALID_TOOLS.includes(tool)) {
-        throw new util_1.UserError(`Invalid tool "${tool}". The tool must be one of: ${VALID_TOOLS.join(', ')}.`);
-    }
-}
 
 
 /***/ }),
@@ -33758,7 +33753,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const util_1 = __nccwpck_require__(2629);
-const analysis = __importStar(__nccwpck_require__(9391));
+const analysis = __importStar(__nccwpck_require__(3091));
 const input_helper_1 = __nccwpck_require__(5322);
 async function run() {
     const startedAt = (new Date()).toTimeString();
@@ -33818,8 +33813,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserError = exports.buildError = exports.wrapError = exports.getGithubContext = exports.isGithubEventValid = exports.buildUploadApiUrl = exports.buildTriggerApiUrl = exports.buildSonarcloudUrl = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const validEvents = ['check_run', 'pull_request'];
-const PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod/analysis-input';
 const eventHandlers = {
     'check_run': getCheckRunContext,
     'pull_request': getPullRequestContext
@@ -33844,7 +33837,7 @@ function buildUploadApiUrl(tool) {
 exports.buildUploadApiUrl = buildUploadApiUrl;
 function isGithubEventValid() {
     const eventName = github.context.eventName;
-    return validEvents.includes(eventName);
+    return VALID_EVENTS.includes(eventName);
 }
 exports.isGithubEventValid = isGithubEventValid;
 function getGithubContext() {

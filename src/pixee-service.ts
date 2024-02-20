@@ -3,12 +3,6 @@ import {buildError, buildSonarcloudUrl, buildTriggerApiUrl, buildUploadApiUrl} f
 import axios from "axios";
 import fs from "fs";
 import FormData from "form-data";
-import {Tool} from "./input-helper";
-import {SonarcloudInputs} from "./sonarcloud-inputs";
-
-const UTF = 'utf-8'
-const AUDIENCE = 'https://app.pixee.ai'
-const FILE_NAME = 'sonar_issues.json';
 
 export function downloadSonarcloudFile(inputs: SonarcloudInputs) {
     axios.get(buildSonarcloudUrl(inputs), {
@@ -55,7 +49,6 @@ export function uploadInputFile(tool: Tool, file: string) {
 }
 
 export function triggerPrAnalysis(prNumber: number) {
-    console.log('Test triggerPrAnalysis: ', prNumber)
     const tokenPromise = core.getIDToken(AUDIENCE)
 
     tokenPromise.then(token => {

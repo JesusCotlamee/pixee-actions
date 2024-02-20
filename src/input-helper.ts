@@ -1,9 +1,5 @@
 import * as core from '@actions/core'
 import {UserError} from "./util";
-import {SonarcloudInputs} from "./sonarcloud-inputs";
-
-export type Tool = 'sonar' | 'codeql' | 'semgrep'
-const VALID_TOOLS: Tool[] = ['sonar', 'codeql', 'semgrep'];
 
 /**
  * Helper to get all the inputs for the action

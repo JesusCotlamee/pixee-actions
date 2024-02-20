@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 import {buildError} from "./util";
-import * as analysis from "./analysis-input-resource";
+import * as analysis from "./pixee-service";
 import {getRequiredInput, getSonarcloudInputs, getTool} from "./input-helper";
 
 
