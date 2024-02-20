@@ -15,9 +15,9 @@ runs:
   using: "composite"
   steps:
     - name: Upload file to pixee
-      uses: pixee/pixee-actions/upload-file@main
+      uses: jesuscotlamee/pixee-actions/upload-file@main
       with:
         file: ${{ inputs.file }}
         tool: ${{ inputs.tool }}
     - name: Call trigger
-      uses: pixee/pixee-actions/trigger@main
+      uses: jesuscotlamee/pixee-actions/trigger@main
