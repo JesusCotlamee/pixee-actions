@@ -1,27 +1,25 @@
-name: Upload file
+name: Share Static Analysis with Pixeebot
 
 on:
   pull_request:
     types: [ opened ]
 
 permissions:
-  contents: read
   id-token: write
 
 jobs:
-  upload-file:
+  share-analysis-with-pixeebot:
     runs-on: ubuntu-latest
-    name: Upload file
+    name: Share Static Analysis with Pixeebot
     timeout-minutes: 2
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@v4
       - name: Upload file
-        # Replace <latest-commit> with the latest stable commit available in pixee-actions
-        uses: JesusCotlamee/pixee-actions/upload-file@<latest-commit>
+        uses: pixee/pixee-actions/upload-file@main
         with:
           # Replace <file> with the file to be uploaded.
-          FILE: <file>
+          file: <file>
           # Replace <tool> with the specific property that identifies the tool related to the uploaded file. Allowed values: 'sonar', 'codeql', 'semgrep'
-          TOOL: <tool>
+          tool: <tool>

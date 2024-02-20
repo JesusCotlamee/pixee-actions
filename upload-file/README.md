@@ -16,14 +16,13 @@ This action facilitates the process of uploading files to an AWS S3 bucket for f
         - `codeql`
         - `semgrep`
 
-- `url`:
-    - **Description:** The endpoint URL where the file will be uploaded. (Optional)
-    - **Required:** No
-
 ### Outputs
 
 - `status`:
-    - **Description:** The status of the upload process.
+    - **Description:** Status of the action execution.
+    - **Possible values:**
+        - `error`: Indicates that the action encountered an error.
+        - `success`: Indicates that the action completed successfully.
 
 ### Example Usage
 

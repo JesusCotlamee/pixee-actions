@@ -2,19 +2,18 @@ import * as core from '@actions/core'
 import {UploadInputs} from './upload-inputs'
 import {UserError} from "./util";
 
-export type Inputs = 'file' | 'url' | 'tool' | 'pr-number'
+export type Inputs = 'file' | 'tool'
 const VALID_TOOLS = ['sonar', 'codeql', 'semgrep'];
 
 /**
  * Helper to get all the inputs for the action
  */
 export function getInputs(): UploadInputs {
-    const url = core.getInput('url');
     const file = getRequiredInput('file');
     const tool = getRequiredInput('tool');
     validateTool(tool)
 
-    return {file, url, tool} as UploadInputs
+    return {file, tool} as UploadInputs
 }
 
 function getRequiredInput(name: Inputs): string {

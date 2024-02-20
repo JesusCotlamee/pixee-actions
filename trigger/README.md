@@ -2,20 +2,13 @@
 
 This action triggers an analysis of pull requests on GitHub using Pixee.
 
-### Inputs
-
-- `url`:
-  - **Description:** Endpoint URL where the analysis will be triggered. (Optional)
-  - **Required:** No
-
-- `pr-number`:
-  - **Description:** PR number to trigger analysis for. (Optional)
-  - **Required:** No
-
 ### Outputs
 
 - `status`:
-  - **Description:** The status of the trigger.
+  - **Description:** Status of the action execution.
+  - **Possible values:**
+    - `error`: Indicates that the action encountered an error.
+    - `success`: Indicates that the action completed successfully.
 
 ### Example Usage
 

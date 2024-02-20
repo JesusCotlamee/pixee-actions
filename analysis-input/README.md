@@ -1,6 +1,6 @@
 ## Analysis Input Pixee Action
 
-This composite action combines two key functionalities to simplify and automate analysis in the development workflow.
+This composite action combines the update-file and trigger actions into one comprehensive action that applies Pixee's automated fixes to this repository.
 
 ### Inputs
 
@@ -9,25 +9,20 @@ This composite action combines two key functionalities to simplify and automate 
     - **Required:** Yes
 
 - `tool`:
-    - **Description:** Identifies the tool or service related to the uploaded file.
+    - **Description:** Identifies the tool or service that produced the file being uploaded.
     - **Required:** Yes
     - **Options:**
         - `sonar`
         - `codeql`
         - `semgrep`
 
-- `url`:
-    - **Description:** The endpoint URL where the file will be uploaded. (Optional)
-    - **Required:** No
-
-- `pr-number`:
-    - **Description:** The PR number to trigger analysis for. (Optional)
-    - **Required:** No
-
 ### Outputs
 
 - `status`:
-    - **Description:** The status of the analysis.
+    - **Description:** Status of the action execution.
+    - **Possible values:**
+        - `error`: Indicates that the action encountered an error.
+        - `success`: Indicates that the action completed successfully.
 
 ### Example Usage
 

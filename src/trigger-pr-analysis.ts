@@ -8,16 +8,16 @@ async function run() {
 
     try {
         if (isGithubEventValid()){
-            const {number} = getGithubContext();
-            const prNumber = core.getInput('pr-number')
+            const {prNumber} = getGithubContext();
 
-            if (number || prNumber) {
-                analysis.triggerPrAnalysis(core.getInput('url'), number ?? prNumber);
+            if (prNumber) {
+                analysis.triggerPrAnalysis(prNumber);
                 core.setOutput('status', 'success');
                 return
             }
             core.setFailed('PR number not found. Please provide a valid PR number.');
         }
+
         core.setFailed('Invalid GitHub event');
     } catch (error) {
         buildError(error)
@@ -25,13 +25,7 @@ async function run() {
 }
 
 async function runWrapper() {
-    try {
-        await run();
-    } catch (error) {
-        core.setFailed(
-            `Action failed: ${wrapError(error).message}`,
-        );
-    }
+    await run();
 }
 
 void runWrapper();

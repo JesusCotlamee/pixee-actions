@@ -22672,6 +22672,9 @@ function httpRedirectFetch (fetchParams, response) {
     // https://fetch.spec.whatwg.org/#cors-non-wildcard-request-header-name
     request.headersList.delete('authorization')
 
+    // https://fetch.spec.whatwg.org/#authentication-entries
+    request.headersList.delete('proxy-authorization', true)
+
     // "Cookie" and "Host" are forbidden request-headers, which undici doesn't implement.
     request.headersList.delete('cookie')
     request.headersList.delete('host')
@@ -33587,14 +33590,14 @@ const form_data_1 = __importDefault(__nccwpck_require__(4334));
 const UTF = 'utf-8';
 const AUDIENCE = 'https://app.pixee.ai';
 function uploadInputFile(inputs) {
-    const fileContent = fs_1.default.readFileSync(inputs.file, UTF);
+    const { file, tool } = inputs;
+    const fileContent = fs_1.default.readFileSync(file, UTF);
     const form = new form_data_1.default();
     form.append('file', fileContent);
     const tokenPromise = core.getIDToken(AUDIENCE);
     tokenPromise.then(token => {
         try {
-            const { url, tool } = inputs;
-            axios_1.default.put((0, util_1.buildApiUrl)('upload', url, null, tool), form, {
+            axios_1.default.put((0, util_1.buildUploadApiUrl)(tool), form, {
                 headers: {
                     ...form.getHeaders(),
                     Authorization: `Bearer ${token}`,
@@ -33614,11 +33617,11 @@ function uploadInputFile(inputs) {
     });
 }
 exports.uploadInputFile = uploadInputFile;
-function triggerPrAnalysis(url, prNumber) {
+function triggerPrAnalysis(prNumber) {
     const tokenPromise = core.getIDToken(AUDIENCE);
     tokenPromise.then(token => {
         try {
-            axios_1.default.post((0, util_1.buildApiUrl)('trigger', url, prNumber), null, {
+            axios_1.default.post((0, util_1.buildTriggerApiUrl)(prNumber), null, {
                 headers: {
                     contentType: 'application/json',
                     Authorization: `Bearer ${token}`
@@ -33679,11 +33682,10 @@ const VALID_TOOLS = ['sonar', 'codeql', 'semgrep'];
  * Helper to get all the inputs for the action
  */
 function getInputs() {
-    const url = core.getInput('url');
     const file = getRequiredInput('file');
     const tool = getRequiredInput('tool');
     validateTool(tool);
-    return { file, url, tool };
+    return { file, tool };
 }
 exports.getInputs = getInputs;
 function getRequiredInput(name) {
@@ -33748,12 +33750,7 @@ async function run() {
     }
 }
 async function runWrapper() {
-    try {
-        await run();
-    }
-    catch (error) {
-        core.setFailed(`Action failed: ${(0, util_1.wrapError)(error).message}`);
-    }
+    await run();
 }
 void runWrapper();
 
@@ -33789,20 +33786,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserError = exports.buildError = exports.wrapError = exports.getGithubContext = exports.isGithubEventValid = exports.buildApiUrl = void 0;
+exports.UserError = exports.buildError = exports.wrapError = exports.getGithubContext = exports.isGithubEventValid = exports.buildUploadApiUrl = exports.buildTriggerApiUrl = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const validEvents = ['check_run', 'pull_request'];
-const PIXEE_SAMBOX_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod';
-function buildApiUrl(type, url, prNumber, tool) {
-    const customUrl = url ? url : PIXEE_SAMBOX_URL;
-    const { owner, repo, number, sha } = getGithubContext();
-    if (type === 'upload') {
-        return `${customUrl}/analysis-input/${owner}/${repo}/${sha}/${tool}`;
-    }
-    return `${customUrl}/analysis-input/${owner}/${repo}/${prNumber ?? number}`;
+const PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod';
+function buildTriggerApiUrl(prNumber) {
+    const { owner, repo, sha } = getGithubContext();
+    return `${PIXEE_URL}/${owner}/${repo}/${prNumber}`;
 }
-exports.buildApiUrl = buildApiUrl;
+exports.buildTriggerApiUrl = buildTriggerApiUrl;
+function buildUploadApiUrl(tool) {
+    const { owner, repo, sha } = getGithubContext();
+    return `${PIXEE_URL}/${owner}/${repo}/${sha}/${tool}`;
+}
+exports.buildUploadApiUrl = buildUploadApiUrl;
 function isGithubEventValid() {
     const eventName = github.context.eventName;
     return validEvents.includes(eventName);
@@ -33821,13 +33819,13 @@ exports.getGithubContext = getGithubContext;
 function getPullRequestContext(context) {
     const number = context.issue.number;
     const sha = context.payload.pull_request?.head.sha;
-    return { number, sha };
+    return { prNumber: number, sha };
 }
 function getCheckRunContext(context) {
     const actionEvent = context.payload.check_run;
     const number = actionEvent.pull_requests[0].number;
     const sha = actionEvent.head_sha;
-    return { number, sha };
+    return { prNumber: number, sha };
 }
 function wrapError(error) {
     return error instanceof Error ? error : new Error(String(error));
@@ -33836,6 +33834,7 @@ exports.wrapError = wrapError;
 function buildError(unwrappedError) {
     const error = wrapError(unwrappedError);
     const message = error.message;
+    core.setOutput("status", "error");
     core.setFailed(message);
     return;
 }

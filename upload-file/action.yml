@@ -1,4 +1,4 @@
-name: Upload file
+name: Share Static Analysis with Pixeebot
 description: Upload file to Pixee
 author: Pixee
 inputs:
@@ -10,12 +10,14 @@ inputs:
       Specific property that identifies the tool related to the uploaded file.
       Allowed values: 'sonar', 'codeql', 'semgrep'
     required: true
-  url:
-    description: Endpoint URL where the file will be uploaded.
-    required: false
 outputs:
   status:
-    description: Status
+    description: |
+      Status of the action execution.
+      Possible values:
+      - 'error': Indicates that the action encountered an error.
+      - 'success': Indicates that the action completed successfully.
+
 runs:
   using: node20
   main: ../dist/upload-file/index.js

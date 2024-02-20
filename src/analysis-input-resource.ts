@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import {buildApiUrl, buildError} from "./util";
+import {buildError, buildTriggerApiUrl, buildUploadApiUrl} from "./util";
 import axios from "axios";
 import {UploadInputs} from "./upload-inputs";
 import fs from "fs";
@@ -9,7 +9,8 @@ const UTF = 'utf-8'
 const AUDIENCE = 'https://app.pixee.ai'
 
 export function uploadInputFile(inputs: UploadInputs) {
-    const fileContent = fs.readFileSync(inputs.file, UTF);
+    const { file, tool} = inputs
+    const fileContent = fs.readFileSync(file, UTF);
     const form = new FormData();
     form.append('file', fileContent);
 
@@ -17,8 +18,7 @@ export function uploadInputFile(inputs: UploadInputs) {
 
     tokenPromise.then(token => {
             try {
-                const {url, tool} = inputs
-                axios.put(buildApiUrl('upload', url, null, tool), form, {
+                axios.put(buildUploadApiUrl(tool), form, {
                     headers: {
                         ...form.getHeaders(),
                         Authorization: `Bearer ${token}`,
@@ -38,12 +38,12 @@ export function uploadInputFile(inputs: UploadInputs) {
     )
 }
 
-export function triggerPrAnalysis(url: string, prNumber: number | null) {
+export function triggerPrAnalysis(prNumber: number) {
     const tokenPromise = core.getIDToken(AUDIENCE)
 
     tokenPromise.then(token => {
         try {
-            axios.post(buildApiUrl('trigger', url, prNumber), null, {
+            axios.post(buildTriggerApiUrl(prNumber), null, {
                 headers: {
                     contentType: 'application/json',
                     Authorization: `Bearer ${token}`
