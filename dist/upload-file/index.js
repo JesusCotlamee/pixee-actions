@@ -33818,6 +33818,7 @@ function getGithubContext() {
         'pull_request': getPullRequestContext
     };
     const handler = eventHandlers[eventName];
+    console.log('handler: ', handler(github.context));
     return { owner, repo, ...handler(github.context) };
 }
 exports.getGithubContext = getGithubContext;

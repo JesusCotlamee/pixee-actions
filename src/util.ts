@@ -41,6 +41,8 @@ export function getGithubContext(): GitHubContext {
     };
 
     const handler = eventHandlers[eventName];
+    console.log('handler: ', handler(github.context))
+
     return { owner, repo, ...handler(github.context) };
 }
 
