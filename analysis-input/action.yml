@@ -18,7 +18,7 @@ inputs:
     required: false
   sonar-api:
     description: Sonar API
-    required: false
+    default: https://sonarcloud.io/api
 
 runs:
   using: "composite"
