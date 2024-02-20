@@ -5,7 +5,7 @@ import {Context} from "node:vm";
 type GithubEvent = 'check_run' | 'pull_request';
 
 const validEvents: GithubEvent[] = ['check_run', 'pull_request'];
-const PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod'
+const PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod/analysis-input'
 
 interface GitHubContext {
     owner: string;
@@ -33,6 +33,7 @@ export function isGithubEventValid(): boolean {
 
 export function getGithubContext(): GitHubContext {
     const { issue: {owner, repo}, eventName } = github.context;
+    console.log('eventName: ', eventName)
 
     const eventHandlers: { [eventName: string]: (context: Context) => Pick<GitHubContext, "prNumber" | "sha"> } = {
         'check_run': getCheckRunContext,
@@ -64,6 +65,7 @@ export function wrapError(error: unknown): Error {
 export function buildError(unwrappedError: unknown) {
     const error = wrapError(unwrappedError);
     const message = error.message;
+    console.log('failed: ', message)
     core.setOutput("status", "error");
     core.setFailed(message);
     return;

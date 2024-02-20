@@ -33594,6 +33594,7 @@ function uploadInputFile(inputs) {
     const fileContent = fs_1.default.readFileSync(file, UTF);
     const form = new form_data_1.default();
     form.append('file', fileContent);
+    console.log('inputs: uploadInputFile', inputs);
     const tokenPromise = core.getIDToken(AUDIENCE);
     tokenPromise.then(token => {
         try {
@@ -33604,6 +33605,7 @@ function uploadInputFile(inputs) {
                 },
             })
                 .then(response => {
+                console.log('response uploadInputFile: ', response);
                 if (response.status != 204) {
                     core.setFailed(`Failed response status: ${response.status}`);
                     return;
@@ -33618,6 +33620,7 @@ function uploadInputFile(inputs) {
 }
 exports.uploadInputFile = uploadInputFile;
 function triggerPrAnalysis(prNumber) {
+    console.log('Test triggerPrAnalysis: ', prNumber);
     const tokenPromise = core.getIDToken(AUDIENCE);
     tokenPromise.then(token => {
         try {
@@ -33628,6 +33631,7 @@ function triggerPrAnalysis(prNumber) {
                 }
             })
                 .then(response => {
+                console.log('response triggerPrAnalysis: ', response);
                 if (response.status != 204) {
                     core.setFailed(`Failed response status: ${response.status}`);
                     return;
@@ -33790,7 +33794,7 @@ exports.UserError = exports.buildError = exports.wrapError = exports.getGithubCo
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const validEvents = ['check_run', 'pull_request'];
-const PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod';
+const PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod/analysis-input';
 function buildTriggerApiUrl(prNumber) {
     const { owner, repo, sha } = getGithubContext();
     return `${PIXEE_URL}/${owner}/${repo}/${prNumber}`;
@@ -33808,6 +33812,7 @@ function isGithubEventValid() {
 exports.isGithubEventValid = isGithubEventValid;
 function getGithubContext() {
     const { issue: { owner, repo }, eventName } = github.context;
+    console.log('eventName: ', eventName);
     const eventHandlers = {
         'check_run': getCheckRunContext,
         'pull_request': getPullRequestContext
@@ -33834,6 +33839,7 @@ exports.wrapError = wrapError;
 function buildError(unwrappedError) {
     const error = wrapError(unwrappedError);
     const message = error.message;
+    console.log('failed: ', message);
     core.setOutput("status", "error");
     core.setFailed(message);
     return;

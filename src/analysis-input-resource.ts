@@ -14,6 +14,7 @@ export function uploadInputFile(inputs: UploadInputs) {
     const form = new FormData();
     form.append('file', fileContent);
 
+    console.log('inputs: uploadInputFile', inputs)
     const tokenPromise = core.getIDToken(AUDIENCE)
 
     tokenPromise.then(token => {
@@ -25,6 +26,7 @@ export function uploadInputFile(inputs: UploadInputs) {
                     },
                 })
                     .then(response => {
+                        console.log('response uploadInputFile: ', response)
                         if (response.status != 204) {
                             core.setFailed(`Failed response status: ${response.status}`);
                             return
@@ -39,6 +41,7 @@ export function uploadInputFile(inputs: UploadInputs) {
 }
 
 export function triggerPrAnalysis(prNumber: number) {
+    console.log('Test triggerPrAnalysis: ', prNumber)
     const tokenPromise = core.getIDToken(AUDIENCE)
 
     tokenPromise.then(token => {
@@ -50,6 +53,7 @@ export function triggerPrAnalysis(prNumber: number) {
                 }
             })
                 .then(response => {
+                    console.log('response triggerPrAnalysis: ', response)
                     if (response.status != 204) {
                         core.setFailed(`Failed response status: ${response.status}`);
                         return
