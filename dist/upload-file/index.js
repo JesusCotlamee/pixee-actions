@@ -33595,7 +33595,6 @@ function getSonarCloudInputs() {
     const token = core.getInput('sonar-token');
     const componentKey = core.getInput('sonar-component-key');
     const apiUrl = core.getInput('sonar-api-url', { required: true });
-    console.log('componentKey getSonarCloudInputs : ', componentKey);
     return { token, componentKey, apiUrl };
 }
 exports.getSonarCloudInputs = getSonarCloudInputs;
@@ -33834,7 +33833,7 @@ const eventHandlers = {
 function buildSonarcloudUrl(inputs) {
     const { apiUrl, componentKey } = inputs;
     const { owner, repo, prNumber } = getGitHubContext();
-    const defaultComponentKey = componentKey != '' ? componentKey : `${owner}_${repo}`;
+    const defaultComponentKey = componentKey ? componentKey : `${owner}_${repo}`;
     console.log('componentKey: ', componentKey);
     console.log('defaultComponentKey: ', defaultComponentKey);
     console.log('owner_repo: ', `${owner}_${repo}`);

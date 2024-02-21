@@ -16,7 +16,7 @@ export function getSonarCloudInputs(): SonarCloudInputs {
     const token = core.getInput('sonar-token');
     const componentKey = core.getInput('sonar-component-key');
     const apiUrl = core.getInput('sonar-api-url', {required: true});
-    console.log('componentKey getSonarCloudInputs : ', componentKey)
+
     return { token, componentKey, apiUrl}
 }
 
