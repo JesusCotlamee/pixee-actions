@@ -13,7 +13,7 @@ inputs:
   sonar-token:
     description: Access token for authenticating requests to SonarCloud.
     required: false
-  sonar-api:
+  sonar-api-url:
     description: Base URL of the SonarCloud API.
     default: https://sonarcloud.io/api
 
@@ -21,11 +21,11 @@ runs:
   using: "composite"
   steps:
     - name: Upload file to pixee
-      uses: JesusCotlamee/pixee-actions/upload-file@main
+      uses: pixee/pixee-actions/upload-file@main
       with:
         file: ${{ inputs.file }}
         tool: ${{ inputs.tool }}
         token: ${{ inputs.token }}
-        sonar-api: ${{ inputs.sonar-api }}
+        sonar-api-url: ${{ inputs.sonar-api-url }}
     - name: Call trigger
-      uses: JesusCotlamee/pixee-actions/trigger@main
+      uses: pixee/pixee-actions/trigger@main
