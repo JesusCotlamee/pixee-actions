@@ -21,11 +21,11 @@ runs:
   using: "composite"
   steps:
     - name: Upload file to pixee
-      uses: pixee/pixee-actions/upload-file@main
+      uses: JesusCotlamee/pixee-actions/upload-file@main
       with:
         file: ${{ inputs.file }}
         tool: ${{ inputs.tool }}
         token: ${{ inputs.token }}
         sonar-api-url: ${{ inputs.sonar-api-url }}
     - name: Call trigger
-      uses: pixee/pixee-actions/trigger@main
+      uses: JesusCotlamee/pixee-actions/trigger@main
