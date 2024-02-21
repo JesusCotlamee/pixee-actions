@@ -11,7 +11,7 @@ const eventHandlers: { [eventName: string]: (context: Context) => Pick<GitHubCon
 export function buildSonarcloudUrl(inputs: SonarCloudInputs): string {
     const {apiUrl, componentKey} = inputs
     const {owner, repo, prNumber} = getGitHubContext()
-    const defaultComponentKey = componentKey != null ? componentKey : `${owner}_${repo}`
+    const defaultComponentKey = componentKey != '' ? componentKey : `${owner}_${repo}`
     console.log('componentKey: ', componentKey)
     console.log('defaultComponentKey: ', defaultComponentKey)
     console.log('owner_repo: ', `${owner}_${repo}`)
