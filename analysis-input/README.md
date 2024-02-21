@@ -24,6 +24,10 @@ This composite action combines the update-file and trigger actions into one comp
     - **Description:** Access token for authenticating requests to SonarCloud.
     - **Required:** No
 
+- `sonar-component-key`:
+    - **Description:** Key identifying the SonarCloud component to be analyzed.
+    - **Required:** No
+
 - `sonar-api-url`:
     - **Description:** Base URL of the SonarCloud API. This property is only required when using SonarQube. If you're using SonarCloud, you can omit it.
     - **Required:** No
