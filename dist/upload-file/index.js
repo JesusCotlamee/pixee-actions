@@ -33834,9 +33834,6 @@ function buildSonarcloudUrl(inputs) {
     const { apiUrl, componentKey } = inputs;
     const { owner, repo, prNumber } = getGitHubContext();
     const defaultComponentKey = componentKey ? componentKey : `${owner}_${repo}`;
-    console.log('componentKey: ', componentKey);
-    console.log('defaultComponentKey: ', defaultComponentKey);
-    console.log('owner_repo: ', `${owner}_${repo}`);
     return `${apiUrl}/issues/search?componentKeys=${defaultComponentKey}&resolved=false&pullRequest=${prNumber}`;
 }
 exports.buildSonarcloudUrl = buildSonarcloudUrl;
