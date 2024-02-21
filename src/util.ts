@@ -1,14 +1,14 @@
 import * as core from "@actions/core";
 import * as github from '@actions/github';
 import {Context} from "node:vm";
-import {GitHubContext, GithubEvent, PIXEE_URL, SonarcloudInputs, VALID_EVENTS} from "./shared";
+import {GitHubContext, GitHubEvent, PIXEE_URL, SonarCloudInputs, VALID_EVENTS} from "./shared";
 
 const eventHandlers: { [eventName: string]: (context: Context) => Pick<GitHubContext, "prNumber" | "sha"> } = {
     'check_run': getCheckRunContext,
     'pull_request': getPullRequestContext
 };
 
-export function buildSonarcloudUrl(inputs: SonarcloudInputs): string {
+export function buildSonarcloudUrl(inputs: SonarCloudInputs): string {
     const {componentKey, urlApi} = inputs
     const context = github.context
     const handler = eventHandlers[context.eventName];
@@ -18,23 +18,23 @@ export function buildSonarcloudUrl(inputs: SonarcloudInputs): string {
 }
 
 export function buildTriggerApiUrl(prNumber: number): string {
-    const {owner, repo, sha} = getGithubContext()
+    const {owner, repo, sha} = getGitHubContext()
 
     return `${PIXEE_URL}/${owner}/${repo}/${prNumber}`
 }
 
 export function buildUploadApiUrl(tool: string): string {
-    const {owner, repo, sha} = getGithubContext()
+    const {owner, repo, sha} = getGitHubContext()
 
     return `${PIXEE_URL}/${owner}/${repo}/${sha}/${tool}`
 }
 
-export function isGithubEventValid(): boolean {
-    const eventName = github.context.eventName as GithubEvent
+export function isGitHubEventValid(): boolean {
+    const eventName = github.context.eventName as GitHubEvent
     return VALID_EVENTS.includes(eventName);
 }
 
-export function getGithubContext(): GitHubContext {
+export function getGitHubContext(): GitHubContext {
     const { issue: {owner, repo}, eventName } = github.context;
     const handler = eventHandlers[eventName];
 
