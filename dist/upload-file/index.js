@@ -33834,7 +33834,7 @@ const eventHandlers = {
 function buildSonarcloudUrl(inputs) {
     const { apiUrl, componentKey } = inputs;
     const { owner, repo, prNumber } = getGitHubContext();
-    const defaultComponentKey = componentKey ?? `${owner}_${repo}`;
+    const defaultComponentKey = componentKey != null ? componentKey : `${owner}_${repo}`;
     console.log('componentKey: ', componentKey);
     console.log('defaultComponentKey: ', defaultComponentKey);
     console.log('owner_repo: ', `${owner}_${repo}`);
