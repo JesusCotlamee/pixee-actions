@@ -8,15 +8,10 @@ const eventHandlers: { [eventName: string]: (context: Context) => Pick<GitHubCon
     'pull_request': getPullRequestContext
 };
 
-export function buildSonarcloudUrl(inputs: SonarCloudInputs): string {
-    const {componentKey, urlApi} = inputs
-
+export function buildSonarcloudUrl(urlApi: string): string {
     const {owner, repo, prNumber} = getGitHubContext()
 
-    console.log('ComponentKey: ', componentKey)
-    console.log('Custom componentKey: ', `${owner}_${repo}`)
-
-    return `${urlApi}/issues/search?componentKeys=${componentKey}&resolved=false&pullRequest=${prNumber}`
+    return `${urlApi}/issues/search?componentKeys=${owner}_${repo}&resolved=false&pullRequest=${prNumber}`
 }
 
 export function buildTriggerApiUrl(prNumber: number): string {
