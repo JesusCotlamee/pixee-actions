@@ -33589,10 +33589,11 @@ const fs_1 = __importDefault(__nccwpck_require__(7147));
 const form_data_1 = __importDefault(__nccwpck_require__(4334));
 const shared_1 = __nccwpck_require__(3826);
 function downloadSonarcloudFile(inputs) {
-    axios_1.default.get((0, util_1.buildSonarcloudUrl)(inputs), {
+    const { apiUrl, token } = inputs;
+    axios_1.default.get((0, util_1.buildSonarcloudUrl)(apiUrl), {
         headers: {
             contentType: 'application/json',
-            Authorization: `Bearer ${inputs.token}`
+            Authorization: `Bearer ${token}`
         },
         responseType: 'json'
     })
@@ -33667,7 +33668,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VALID_TOOLS = exports.VALID_EVENTS = exports.UTF = exports.PIXEE_URL = exports.FILE_NAME = exports.AUDIENCE = void 0;
 exports.AUDIENCE = 'https://app.pixee.ai';
 exports.FILE_NAME = 'sonar_issues.json';
-exports.PIXEE_URL = 'https://app.pixee.ai/analysis-input';
+exports.PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod/analysis-input';
 exports.UTF = 'utf-8';
 exports.VALID_EVENTS = ['check_run', 'pull_request'];
 exports.VALID_TOOLS = ['sonar', 'codeql', 'semgrep'];
@@ -33771,12 +33772,9 @@ const eventHandlers = {
     'check_run': getCheckRunContext,
     'pull_request': getPullRequestContext
 };
-function buildSonarcloudUrl(inputs) {
-    const { componentKey, urlApi } = inputs;
+function buildSonarcloudUrl(apiUrl) {
     const { owner, repo, prNumber } = getGitHubContext();
-    console.log('ComponentKey: ', componentKey);
-    console.log('Custom componentKey: ', `${owner}_${repo}`);
-    return `${urlApi}/issues/search?componentKeys=${componentKey}&resolved=false&pullRequest=${prNumber}`;
+    return `${apiUrl}/issues/search?componentKeys=${owner}_${repo}&resolved=false&pullRequest=${prNumber}`;
 }
 exports.buildSonarcloudUrl = buildSonarcloudUrl;
 function buildTriggerApiUrl(prNumber) {
