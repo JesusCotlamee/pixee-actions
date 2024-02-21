@@ -15,6 +15,7 @@ inputs:
     required: false
   sonar-component-key:
     description: Key identifying the SonarCloud component to be analyzed.
+    required: false
   sonar-api-url:
     description: Base URL of the SonarCloud API.
     default: https://sonarcloud.io/api
