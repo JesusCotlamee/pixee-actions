@@ -33854,6 +33854,7 @@ function isGitHubEventValid() {
 }
 exports.isGitHubEventValid = isGitHubEventValid;
 function getGitHubContext() {
+    console.log('github.context: ', github.context);
     const { issue: { owner, repo }, eventName } = github.context;
     const handler = eventHandlers[eventName];
     return { owner, repo, ...handler(github.context) };

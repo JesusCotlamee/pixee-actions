@@ -34,6 +34,7 @@ export function isGitHubEventValid(): boolean {
 }
 
 export function getGitHubContext(): GitHubContext {
+    console.log('github.context: ', github.context)
     const { issue: {owner, repo}, eventName } = github.context;
     const handler = eventHandlers[eventName];
 
