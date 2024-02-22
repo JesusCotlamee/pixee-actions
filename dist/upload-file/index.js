@@ -33647,6 +33647,7 @@ const fs_1 = __importDefault(__nccwpck_require__(7147));
 const form_data_1 = __importDefault(__nccwpck_require__(4334));
 const shared_1 = __nccwpck_require__(3826);
 function downloadSonarcloudFile(inputs) {
+    console.log('inputs.token: ', inputs.token);
     axios_1.default.get((0, util_1.buildSonarcloudUrl)(inputs), {
         headers: {
             contentType: 'application/json',
