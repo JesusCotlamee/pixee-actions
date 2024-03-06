@@ -29,7 +29,7 @@ export function buildTriggerApiUrl(): string {
     let URL = `${PIXEE_URL}/${owner}/${repo}/${prNumber}`
 
     if (prNumber){
-        URL = `${URL}/1`
+        URL = `${URL}`
     }
 
     console.log('URL buildTriggerApiUrl: ', URL)
@@ -47,6 +47,7 @@ export function buildUploadApiUrl(tool: string): string {
 
 export function isGitHubEventValid(): boolean {
     const eventName = github.context.eventName as GitHubEvent
+    console.log("eventName: ", eventName)
     return VALID_EVENTS.includes(eventName);
 }
 

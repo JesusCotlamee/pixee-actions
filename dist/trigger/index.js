@@ -33785,7 +33785,7 @@ function buildTriggerApiUrl() {
     const { owner, repo, sha, prNumber } = getGitHubContext();
     let URL = `${shared_1.PIXEE_URL}/${owner}/${repo}/${prNumber}`;
     if (prNumber) {
-        URL = `${URL}/1`;
+        URL = `${URL}`;
     }
     console.log('URL buildTriggerApiUrl: ', URL);
     return URL;
@@ -33801,6 +33801,7 @@ function buildUploadApiUrl(tool) {
 exports.buildUploadApiUrl = buildUploadApiUrl;
 function isGitHubEventValid() {
     const eventName = github.context.eventName;
+    console.log("eventName: ", eventName);
     return shared_1.VALID_EVENTS.includes(eventName);
 }
 exports.isGitHubEventValid = isGitHubEventValid;
