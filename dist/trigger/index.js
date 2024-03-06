@@ -33642,6 +33642,7 @@ function triggerPrAnalysis() {
                 }
             })
                 .then(response => {
+                console.log("response: ", response);
                 if (response.status != 204) {
                     core.setFailed(`Failed response status: ${response.status}`);
                     return;
@@ -33650,6 +33651,7 @@ function triggerPrAnalysis() {
                 .catch(error => (0, util_1.buildError)(error));
         }
         catch (error) {
+            console.log('Error ***** ', error);
             (0, util_1.buildError)(error);
         }
     });
@@ -33715,7 +33717,7 @@ async function run() {
         if ((0, util_1.isGitHubEventValid)()) {
             analysis.triggerPrAnalysis();
             core.setOutput('status', 'success');
-            core.setFailed('PR number not found. Please provide a valid PR number.');
+            return;
         }
         core.setFailed('Invalid GitHub event');
     }

@@ -33700,6 +33700,7 @@ function triggerPrAnalysis() {
                 }
             })
                 .then(response => {
+                console.log("response: ", response);
                 if (response.status != 204) {
                     core.setFailed(`Failed response status: ${response.status}`);
                     return;
@@ -33708,6 +33709,7 @@ function triggerPrAnalysis() {
                 .catch(error => (0, util_1.buildError)(error));
         }
         catch (error) {
+            console.log('Error ***** ', error);
             (0, util_1.buildError)(error);
         }
     });

@@ -11,8 +11,7 @@ async function run() {
 
                 analysis.triggerPrAnalysis();
                 core.setOutput('status', 'success');
-
-            core.setFailed('PR number not found. Please provide a valid PR number.');
+            return
         }
 
         core.setFailed('Invalid GitHub event');
