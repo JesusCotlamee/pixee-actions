@@ -8,13 +8,10 @@ async function run() {
 
     try {
         if (isGitHubEventValid()){
-            const {prNumber} = getGitHubContext();
 
-            if (prNumber) {
-                analysis.triggerPrAnalysis(prNumber);
+                analysis.triggerPrAnalysis();
                 core.setOutput('status', 'success');
-                return
-            }
+
             core.setFailed('PR number not found. Please provide a valid PR number.');
         }
 

@@ -33689,11 +33689,11 @@ function uploadInputFile(tool, file) {
     });
 }
 exports.uploadInputFile = uploadInputFile;
-function triggerPrAnalysis(prNumber) {
+function triggerPrAnalysis() {
     const tokenPromise = core.getIDToken(shared_1.AUDIENCE);
     tokenPromise.then(token => {
         try {
-            axios_1.default.post((0, util_1.buildTriggerApiUrl)(prNumber), null, {
+            axios_1.default.post((0, util_1.buildTriggerApiUrl)(), null, {
                 headers: {
                     contentType: 'application/json',
                     Authorization: `Bearer ${token}`
@@ -33728,7 +33728,7 @@ exports.AUDIENCE = 'https://app.pixee.ai';
 exports.FILE_NAME = 'sonar_issues.json';
 exports.PIXEE_URL = 'https://d22balbl18.execute-api.us-east-1.amazonaws.com/prod/analysis-input';
 exports.UTF = 'utf-8';
-exports.VALID_EVENTS = ['check_run', 'pull_request'];
+exports.VALID_EVENTS = ['check_run', 'pull_request', 'push'];
 exports.VALID_TOOLS = ['sonar', 'codeql', 'semgrep'];
 
 
@@ -33835,12 +33835,20 @@ function buildSonarcloudUrl(inputs) {
     const { apiUrl, componentKey } = inputs;
     const { owner, repo, prNumber } = getGitHubContext();
     const defaultComponentKey = componentKey ? componentKey : `${owner}_${repo}`;
-    return `${apiUrl}/issues/search?componentKeys=${defaultComponentKey}&resolved=false&pullRequest=${prNumber}`;
+    let URL = `${apiUrl}/issues/search?componentKeys=${defaultComponentKey}&resolved=false`;
+    if (prNumber) {
+        URL = `${URL}&pullRequest=${prNumber}`;
+    }
+    return URL;
 }
 exports.buildSonarcloudUrl = buildSonarcloudUrl;
-function buildTriggerApiUrl(prNumber) {
-    const { owner, repo, sha } = getGitHubContext();
-    return `${shared_1.PIXEE_URL}/${owner}/${repo}/${prNumber}`;
+function buildTriggerApiUrl() {
+    const { owner, repo, sha, prNumber } = getGitHubContext();
+    let URL = `${shared_1.PIXEE_URL}/${owner}/${repo}/${prNumber}`;
+    if (prNumber) {
+        URL = `${URL}/1`;
+    }
+    return URL;
 }
 exports.buildTriggerApiUrl = buildTriggerApiUrl;
 function buildUploadApiUrl(tool) {

@@ -12,14 +12,24 @@ export function buildSonarcloudUrl(inputs: SonarCloudInputs): string {
     const {apiUrl, componentKey} = inputs
     const {owner, repo, prNumber} = getGitHubContext()
     const defaultComponentKey = componentKey ? componentKey : `${owner}_${repo}`
+    let URL = `${apiUrl}/issues/search?componentKeys=${defaultComponentKey}&resolved=false`
 
-    return `${apiUrl}/issues/search?componentKeys=${defaultComponentKey}&resolved=false&pullRequest=${prNumber}`
+    if(prNumber){
+        URL = `${URL}&pullRequest=${prNumber}`
+    }
+
+    return URL
 }
 
-export function buildTriggerApiUrl(prNumber: number): string {
-    const {owner, repo, sha} = getGitHubContext()
+export function buildTriggerApiUrl(): string {
+    const {owner, repo, sha, prNumber} = getGitHubContext()
+    let URL = `${PIXEE_URL}/${owner}/${repo}/${prNumber}`
 
-    return `${PIXEE_URL}/${owner}/${repo}/${prNumber}`
+    if (prNumber){
+        URL = `${URL}/1`
+    }
+
+    return URL
 }
 
 export function buildUploadApiUrl(tool: string): string {

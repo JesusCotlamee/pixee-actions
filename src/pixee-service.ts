@@ -50,12 +50,12 @@ export function uploadInputFile(tool: Tool, file: string) {
     )
 }
 
-export function triggerPrAnalysis(prNumber: number) {
+export function triggerPrAnalysis() {
     const tokenPromise = core.getIDToken(AUDIENCE)
 
     tokenPromise.then(token => {
         try {
-            axios.post(buildTriggerApiUrl(prNumber), null, {
+            axios.post(buildTriggerApiUrl(), null, {
                 headers: {
                     contentType: 'application/json',
                     Authorization: `Bearer ${token}`
