@@ -33829,7 +33829,8 @@ const github = __importStar(__nccwpck_require__(5438));
 const shared_1 = __nccwpck_require__(3826);
 const eventHandlers = {
     'check_run': getCheckRunContext,
-    'pull_request': getPullRequestContext
+    'pull_request': getPullRequestContext,
+    'push': getPushContext
 };
 function buildSonarcloudUrl(inputs) {
     const { apiUrl, componentKey } = inputs;
@@ -33839,6 +33840,7 @@ function buildSonarcloudUrl(inputs) {
     if (prNumber) {
         URL = `${URL}&pullRequest=${prNumber}`;
     }
+    console.log("URL buildSonarcloudUrl: ", URL);
     return URL;
 }
 exports.buildSonarcloudUrl = buildSonarcloudUrl;
@@ -33848,11 +33850,15 @@ function buildTriggerApiUrl() {
     if (prNumber) {
         URL = `${URL}/1`;
     }
+    console.log('URL buildTriggerApiUrl: ', URL);
     return URL;
 }
 exports.buildTriggerApiUrl = buildTriggerApiUrl;
 function buildUploadApiUrl(tool) {
     const { owner, repo, sha } = getGitHubContext();
+    console.log('owner: ', owner);
+    console.log('repo: ', repo);
+    console.log('sha: ', sha);
     return `${shared_1.PIXEE_URL}/${owner}/${repo}/${sha}/${tool}`;
 }
 exports.buildUploadApiUrl = buildUploadApiUrl;
@@ -33871,6 +33877,12 @@ exports.getGitHubContext = getGitHubContext;
 function getPullRequestContext(context) {
     const number = context.issue.number;
     const sha = context.payload.pull_request?.head.sha;
+    return { prNumber: number, sha };
+}
+function getPushContext(context) {
+    const sha = context.sha;
+    const number = context.runNumber;
+    console.log('number: ', number);
     return { prNumber: number, sha };
 }
 function getCheckRunContext(context) {

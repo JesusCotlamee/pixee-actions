@@ -5,7 +5,8 @@ import {GitHubContext, GitHubEvent, PIXEE_URL, SonarCloudInputs, VALID_EVENTS} f
 
 const eventHandlers: { [eventName: string]: (context: Context) => Pick<GitHubContext, "prNumber" | "sha"> } = {
     'check_run': getCheckRunContext,
-    'pull_request': getPullRequestContext
+    'pull_request': getPullRequestContext,
+    'push': getPushContext
 };
 
 export function buildSonarcloudUrl(inputs: SonarCloudInputs): string {
@@ -18,6 +19,8 @@ export function buildSonarcloudUrl(inputs: SonarCloudInputs): string {
         URL = `${URL}&pullRequest=${prNumber}`
     }
 
+    console.log("URL buildSonarcloudUrl: ", URL)
+
     return URL
 }
 
@@ -29,12 +32,16 @@ export function buildTriggerApiUrl(): string {
         URL = `${URL}/1`
     }
 
+    console.log('URL buildTriggerApiUrl: ', URL)
+
     return URL
 }
 
 export function buildUploadApiUrl(tool: string): string {
     const {owner, repo, sha} = getGitHubContext()
-
+    console.log('owner: ', owner)
+    console.log('repo: ', repo)
+    console.log('sha: ', sha)
     return `${PIXEE_URL}/${owner}/${repo}/${sha}/${tool}`
 }
 
@@ -54,6 +61,14 @@ export function getGitHubContext(): GitHubContext {
 function getPullRequestContext(context: Context): Pick<GitHubContext, 'prNumber' | 'sha'> {
     const number = context.issue.number;
     const sha = context.payload.pull_request?.head.sha;
+    return { prNumber: number, sha };
+}
+
+function getPushContext(context: Context): Pick<GitHubContext, 'prNumber' | 'sha'> {
+    const sha = context.sha;
+    const number = context.runNumber;
+
+    console.log('number: ', number)
     return { prNumber: number, sha };
 }
 
