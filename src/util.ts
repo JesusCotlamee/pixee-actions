@@ -72,7 +72,7 @@ function getCheckRunContext(context: Context): Pick<GitHubContext, 'prNumber' | 
     const actionEvent = context.payload.check_run
 
     const pr = actionEvent.pull_requests[0]
-
+    console.log("pr: ", pr)
     const number = pr ? pr.number : 1;
     const sha = actionEvent.head_sha;
     return { prNumber: number, sha };
