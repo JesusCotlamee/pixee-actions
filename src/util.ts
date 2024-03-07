@@ -19,7 +19,7 @@ export function buildSonarcloudUrl(inputs: SonarCloudInputs): string {
 
     if(prNumber){
         console.log("prNumber: " , prNumber)
-        URL = `${URL}&pullRequest=${prNumber}`
+        URL = `${URL}`
     }
 
     console.log("URL buildSonarcloudUrl: ", URL)

@@ -33700,7 +33700,6 @@ function triggerPrAnalysis() {
                 }
             })
                 .then(response => {
-                console.log("response: ", response);
                 if (response.status != 204) {
                     core.setFailed(`Failed response status: ${response.status}`);
                     return;
@@ -33841,7 +33840,7 @@ function buildSonarcloudUrl(inputs) {
     let URL = `${apiUrl}/issues/search?componentKeys=${defaultComponentKey}&resolved=false`;
     if (prNumber) {
         console.log("prNumber: ", prNumber);
-        URL = `${URL}&pullRequest=${prNumber}`;
+        URL = `${URL}`;
     }
     console.log("URL buildSonarcloudUrl: ", URL);
     return URL;

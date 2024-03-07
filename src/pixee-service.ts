@@ -62,7 +62,6 @@ export function triggerPrAnalysis() {
                 }
             })
                 .then(response => {
-                    console.log("response: ", response)
                     if (response.status != 204) {
                         core.setFailed(`Failed response status: ${response.status}`);
                         return
