@@ -33832,14 +33832,15 @@ const shared_1 = __nccwpck_require__(3826);
 const eventHandlers = {
     'check_run': getCheckRunContext,
     'pull_request': getPullRequestContext,
-    'push': getPushContext
 };
 function buildSonarcloudUrl(inputs) {
     const { apiUrl, componentKey } = inputs;
     const { owner, repo, prNumber } = getGitHubContext();
     const defaultComponentKey = componentKey ? componentKey : `${owner}_${repo}`;
+    console.log('defaultComponentKey: ', defaultComponentKey);
     let URL = `${apiUrl}/issues/search?componentKeys=${defaultComponentKey}&resolved=false`;
     if (prNumber) {
+        console.log("prNumber: ", prNumber);
         URL = `${URL}&pullRequest=${prNumber}`;
     }
     console.log("URL buildSonarcloudUrl: ", URL);
@@ -33882,15 +33883,10 @@ function getPullRequestContext(context) {
     const sha = context.payload.pull_request?.head.sha;
     return { prNumber: number, sha };
 }
-function getPushContext(context) {
-    const sha = context.sha;
-    const number = context.runNumber;
-    console.log('number: ', number);
-    return { prNumber: number, sha };
-}
 function getCheckRunContext(context) {
     const actionEvent = context.payload.check_run;
-    const number = actionEvent.pull_requests[0].number;
+    const pr = actionEvent.pull_requests[0];
+    const number = pr ? pr.number : 1;
     const sha = actionEvent.head_sha;
     return { prNumber: number, sha };
 }

@@ -6,16 +6,19 @@ import {GitHubContext, GitHubEvent, PIXEE_URL, SonarCloudInputs, VALID_EVENTS} f
 const eventHandlers: { [eventName: string]: (context: Context) => Pick<GitHubContext, "prNumber" | "sha"> } = {
     'check_run': getCheckRunContext,
     'pull_request': getPullRequestContext,
-    'push': getPushContext
 };
 
 export function buildSonarcloudUrl(inputs: SonarCloudInputs): string {
     const {apiUrl, componentKey} = inputs
     const {owner, repo, prNumber} = getGitHubContext()
     const defaultComponentKey = componentKey ? componentKey : `${owner}_${repo}`
+
+    console.log('defaultComponentKey: ', defaultComponentKey)
+
     let URL = `${apiUrl}/issues/search?componentKeys=${defaultComponentKey}&resolved=false`
 
     if(prNumber){
+        console.log("prNumber: " , prNumber)
         URL = `${URL}&pullRequest=${prNumber}`
     }
 
@@ -65,18 +68,12 @@ function getPullRequestContext(context: Context): Pick<GitHubContext, 'prNumber'
     return { prNumber: number, sha };
 }
 
-function getPushContext(context: Context): Pick<GitHubContext, 'prNumber' | 'sha'> {
-    const sha = context.sha;
-    const number = context.runNumber;
-
-    console.log('number: ', number)
-    return { prNumber: number, sha };
-}
-
 function getCheckRunContext(context: Context): Pick<GitHubContext, 'prNumber' | 'sha'> {
     const actionEvent = context.payload.check_run
 
-    const number = actionEvent.pull_requests[0].number;
+    const pr = actionEvent.pull_requests[0]
+
+    const number = pr ? pr.number : 1;
     const sha = actionEvent.head_sha;
     return { prNumber: number, sha };
 }
